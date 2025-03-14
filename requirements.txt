@@ -10,3 +10,9 @@ chromadb
 seaborn
 matplotlib
 scikit-learn
+mlxtend
+community
+python-louvain
+pyvis
+jinja2
+
