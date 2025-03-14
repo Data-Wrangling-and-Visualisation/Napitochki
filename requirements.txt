@@ -5,3 +5,8 @@ python-dotenv
 transformers
 langchain_ollama
 langchain
+pandas
+chromadb
+seaborn
+matplotlib
+scikit-learn
