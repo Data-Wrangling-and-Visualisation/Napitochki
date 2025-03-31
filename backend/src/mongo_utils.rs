@@ -18,25 +18,32 @@ pub async fn get_mongo_client() -> Database {
     return database; 
 }
 
-pub async fn get_drinks(collection: &Collection<Drink>) -> Result<Vec<Drink>, mongodb::error::Error> {
-    let mut cursor = collection.find(doc! {}, None).await?;
+pub async fn get_drinks(collection: &Collection<Drink>) -> Option<Vec<Drink>> {
+    let mut cursor = collection.find(doc! {}, None).await.ok()?;
     let mut drinks = Vec::new();
 
-    while let Some(doc) = cursor.try_next().await? {
+    while let Some(doc) = cursor.try_next().await.ok()? {
         drinks.push(doc);
     }
 
-    Ok(drinks)
+    Some(drinks)
 }
 
-pub async fn get_by_name(collection: &Collection<Drink>, name: String) -> Result<Drink, mongodb::error::Error> {
-    let result = (*collection).find_one(doc! {"name": name}, None).await?;
-
-    return Ok(result.expect("get_by_name db provider runtime error"));   
+pub async fn get_by_name(collection: &Collection<Drink>, name: String) -> Option<Drink> {
+    collection.find_one(doc! {"name": name}, None).await.ok()?
 }
 
-pub async fn get_by_url(collection: &Collection<Drink>, url: String) -> Result<Drink, mongodb::error::Error> {
-    let result = (*collection).find_one(doc! {"drink_url": url}, None).await?;
+pub async fn get_by_url(collection: &Collection<Drink>, url: String) -> Option<Drink> {
+    collection.find_one(doc! {"drink_url": url}, None).await.ok()?
+}
 
-    return Ok(result.expect("get_by_url db provider runtime error"));   
+pub async fn get_by_tastes(collection: &Collection<Drink>, tastes: Vec<String>) -> Option<Vec<Drink>> {
+    let mut cursor = collection.find(doc! {"taste": {"$all": tastes}}, None).await.ok()?;
+    let mut drinks = Vec::new();
+
+    while let Some(doc) = cursor.try_next().await.ok()? {
+        drinks.push(doc);
+    }
+
+    Some(drinks)
 }

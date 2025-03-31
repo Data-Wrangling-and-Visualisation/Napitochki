@@ -5,7 +5,7 @@ mod clip;
 mod categories; 
 
 use model::Drink;
-use mongo_utils::{get_mongo_client, get_drinks, get_by_name, get_by_url};  
+use mongo_utils::{get_mongo_client, get_drinks, get_by_name, get_by_url, get_by_tastes};  
 use chroma_utils::{get_chroma_client, SimilarityResponse};
 use clip::get_text_embedding;   
 
@@ -24,6 +24,8 @@ use axum::http::StatusCode;
 use mongodb::{Collection};
 
 use axum::{routing::{get}, Router, Json, extract::{State, Query}};
+use axum::extract::Json as AxumJson;
+use serde::Deserialize;
 
 struct AppState {
     mongo_collection: Collection<Drink>,
@@ -32,37 +34,46 @@ struct AppState {
 }
 
 
+#[derive(Deserialize)]
+struct DrinkQuery {
+    name: Option<String>,
+    drink_url: Option<String>,
+    taste: Option<Vec<String>>,
+}
+
 async fn get_drink_handler(
     State(state): State<Arc<AppState>>,
-    Query(params): Query<HashMap<String, String>>,
+    AxumJson(body): AxumJson<DrinkQuery>,
 ) -> Result<Json<Vec<Drink>>, StatusCode> {
     let collection = &state.mongo_collection;
 
-    if params.is_empty() {
+    // Ensure only one parameter is passed
+    let params_count = body.drink_url.is_some() as u8
+        + body.name.is_some() as u8
+        + body.taste.is_some() as u8;
+
+    if params_count > 1 {
+        return Err(StatusCode::BAD_REQUEST);
+    }
+
+    if let Some(drink_url) = body.drink_url {
+        if let Some(drink) = get_by_url(collection, drink_url).await {
+            return Ok(Json(vec![drink]));
+        }
+    } else if let Some(drink_name) = body.name {
+        if let Some(drink) = get_by_name(collection, drink_name).await {
+            return Ok(Json(vec![drink]));
+        }
+    } else if let Some(taste) = body.taste {
+        if let Some(drinks) = get_by_tastes(collection, taste).await {
+            return Ok(Json(drinks));
+        }
+    } else {
         let drinks = get_drinks(collection).await.unwrap();
         return Ok(Json(drinks));
     }
 
-    if let Some((key, value)) = params.iter().next() {
-        let mut res = vec![];
-        match key.as_str() {
-            "name" => {
-                let drink = get_by_name(collection, value.to_string()).await.unwrap();
-                res.push(drink);
-            }
-            "url" => {
-                let drink = get_by_url(collection, value.to_string()).await.unwrap();
-                res.push(drink);
-            }
-            _ => {
-                println!("Invalid query parameter: {}", key);
-                return Err(StatusCode::NOT_FOUND);
-            }
-        }
-        return Ok(Json(res));
-    }
-
-    Err(StatusCode::INTERNAL_SERVER_ERROR)
+    Err(StatusCode::NOT_FOUND)
 }
 
 
