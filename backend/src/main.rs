@@ -101,21 +101,30 @@ async fn get_embedding(
     Err(StatusCode::INTERNAL_SERVER_ERROR)
 }
 
-async fn chroma_similarity_search(State(state): State<Arc<AppState>>, Query(params): Query<HashMap<String, String>>) -> Json<SimilarityResponse>{
-    if !params.contains_key("prompt") {
-        return Json(SimilarityResponse {
-            uris: vec![],
-            distances: vec![],
-        });
-    }
+async fn chroma_similarity_search(
+    State(state): State<Arc<AppState>>, 
+    AxumJson(body): AxumJson<HashMap<String, serde_json::Value>>
+) -> Json<SimilarityResponse> {
+    let prompt = match body.get("prompt") {
+        Some(serde_json::Value::String(p)) => p.clone(),
+        _ => {
+            return Json(SimilarityResponse {
+                uris: vec![],
+                distances: vec![],
+            });
+        }
+    };
+
+    let n_results = body.get("n_results")
+        .and_then(|v| v.as_u64())
+        .unwrap_or(10) as usize;
 
     let client = &state.chroma_client; 
     let model = &state.model;
 
-    let text = params.get("prompt").unwrap().to_string();   
-    let embedding = get_text_embedding(model, text).await; 
+    let embedding = get_text_embedding(model, prompt).await; 
     
-    let similarity_response = chroma_utils::simiilarity_search(client, "drinks_text", embedding, 10).await;
+    let similarity_response = chroma_utils::simiilarity_search(client, "drinks_text", embedding, n_results).await;
     return Json(similarity_response); 
 }
 
