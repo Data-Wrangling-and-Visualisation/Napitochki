@@ -1,5 +1,5 @@
 # Napitochki
-Project goal is to develop the visualisation application for different drinks (like lemonades, coee drinks, teas etc.) grouped according to their flavors.
+Project goal is to develop the visualisation application for different drinks (like lemonades, coffee drinks, teas etc.) grouped according to their flavors.
 
 ### Key Objectives
 - Interactive Exploration:
