@@ -1,7 +1,7 @@
 # Napitochki
 Project goal is to develop the visualisation application for different drinks (like lemonades, coee drinks, teas etc.) grouped according to their flavors.
 
-### Key Objectives:
+### Key Objectives
 - Interactive Exploration:
 Allow users to explore drinks based on their taste preferences, making it easier to
 find new favorites.
@@ -23,6 +23,6 @@ Requirements for rust-part (backend) are stored in backend/Cargo.toml
 
 ### Current stage of the project
 - Data for backend is prepared.
-- Backend is deployed at http://89.169.174.146:8888, there is documentation for endpoints in postman:
+- Backend is deployed at http://89.169.174.146:8888, there is a documentation for endpoints in postman:
   https://www.postman.com/warped-star-370484/dwv/collection/qqehskr/drinks
 - Frontend is in development and will be publicly deployed.
