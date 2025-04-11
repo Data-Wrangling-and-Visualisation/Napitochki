@@ -1,28 +1,31 @@
-# Stage 1: Chef
-FROM lukemathwalker/cargo-chef:latest-rust-1.86 as chef
-WORKDIR /app
-RUN apt-get update && apt-get install -y musl-dev gcc libssl-dev pkg-config
+# Stage 0: Base with Rust and Cargo Chef
+FROM rust:1.86-alpine3.21 as chef
+WORKDIR /usr/src/backend
 
-# Stage 2: Planner
+# Install build dependencies
+RUN apk add --no-cache \
+    musl-dev gcc openssl-dev pkgconf \
+    openssl-libs-static curl build-base
+
+# Install cargo-chef
+RUN cargo install cargo-chef
+
+# Stage 1: Planner
 FROM chef as planner
 COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
-# Stage 3: Builder
+# Stage 2: Builder
 FROM chef as builder
-COPY --from=planner /app/recipe.json recipe.json
+COPY --from=planner /usr/src/backend/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
 RUN cargo build --release
 
-# Stage 4: Intermediate
-FROM alpine:3.21.0 as intermediate
+# Stage 3: Runtime
+FROM alpine:3.21.0 as runtime
 RUN apk add --no-cache openssl
-
-# Stage 5: Runtime
-FROM scratch as runtime
 WORKDIR /usr/src/backend
-COPY --from=intermediate /usr/lib /usr/lib
-COPY --from=builder /app/target/release/backend /
-COPY ./.env /
+COPY --from=builder /usr/src/backend/target/release/backend .
+COPY .env .
 CMD [ "./backend" ]
