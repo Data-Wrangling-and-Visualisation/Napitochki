@@ -1,12 +1,22 @@
-// src/App.jsx
 import React from 'react';
-import DrinkList from './components/DrinkList';
+import DrinksVisualization from './components/DrinkVisualization';
+import './App.css';
 
 function App() {
   return (
-    <div>
-      <h1>Welcome to the Drink Info App</h1>
-      <DrinkList />
+    <div className="app">
+      <header>
+        <h1>Napitochki</h1>
+        <p>Visualizing drinks information</p>
+      </header>
+
+      <main>
+        <DrinksVisualization />
+      </main>
+
+      <footer>
+        <p>© 2025 Napitochki</p>
+      </footer>
     </div>
   );
 }
