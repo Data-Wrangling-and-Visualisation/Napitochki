@@ -1,0 +1,35 @@
+/* src/components/ClusterSummary.css */
+.cluster-summary {
+  margin: 20px 0;
+}
+
+.cluster-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.cluster-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cluster-card h4 {
+  margin-top: 0;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.cluster-card ul {
+  padding-left: 20px;
+  margin-bottom: 0;
+}
+
+.cluster-card li {
+  margin-bottom: 4px;
+}

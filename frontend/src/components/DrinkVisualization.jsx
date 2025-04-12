@@ -12,20 +12,21 @@ const DrinksVisualization = () => {
   const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedDrink, setSelectedDrink] = useState(null);
-  const [activeChart, setActiveChart] = useState('scatter');
+  const [activeChart, setActiveChart] = useState('honeycomb');
   const [colorBy, setColorBy] = useState('cluster'); // Новый state
 
   useEffect(() => {
-    const fetchDrinks = async () => {
-      try {
-        const data = await getAllDrinks();
-        setDrinks(data);
-        setLoading(false);
-      } catch (err) {
-        setError('Ошибка при загрузке данных');
-        setLoading(false);
-      }
-    };
+  const fetchDrinks = async () => {
+    try {
+      const data = await getAllDrinks();
+      setDrinks(data);
+      setLoading(false);
+    } catch (err) {
+      setError('Ошибка при загрузке данных');
+      setLoading(false);
+      console.error('Ошибка загрузки данных:', err);
+    }
+  };
 
     fetchDrinks();
   }, []);
@@ -55,30 +56,30 @@ const DrinksVisualization = () => {
       <div className="controls">
         <div className="chart-selector">
           <button
-            className={activeChart === 'scatter' ? 'active' : ''}
-            onClick={() => changeChart('scatter')}
+              className={activeChart === 'honeycomb' ? 'active' : ''}
+              onClick={() => changeChart('honeycomb')}
+          >
+            Honeycomb Chart
+          </button>
+          <button
+              className={activeChart === 'scatter' ? 'active' : ''}
+              onClick={() => changeChart('scatter')}
           >
             Scatter Plot (t-SNE)
           </button>
           <button
-            className={activeChart === 'network' ? 'active' : ''}
-            onClick={() => changeChart('network')}
+              className={activeChart === 'network' ? 'active' : ''}
+              onClick={() => changeChart('network')}
           >
             Network Graph
-          </button>
-          <button
-            className={activeChart === 'honeycomb' ? 'active' : ''}
-            onClick={() => changeChart('honeycomb')}
-          >
-            Honeycomb Chart
           </button>
         </div>
 
         <div className="filters">
           <span>Фильтр по категории: </span>
           <select
-            value={activeFilter}
-            onChange={(e) => handleFilterChange(e.target.value)}
+              value={activeFilter}
+              onChange={(e) => handleFilterChange(e.target.value)}
           >
             <option value="all">Все категории</option>
             {categories.map(category => (
@@ -106,6 +107,7 @@ const DrinksVisualization = () => {
           <ScatterPlot
             data={filteredDrinks}
             onDrinkSelect={handleDrinkSelect}
+            selectedDrink={selectedDrink}
             colorBy={colorBy}
           />
         )}
@@ -116,9 +118,17 @@ const DrinksVisualization = () => {
             colorBy={colorBy}
           />
         )}*/}
+        {/*{activeChart === 'honeycomb' && (*/}
+        {/*  <HoneycombChart*/}
+        {/*    data={filteredDrinks}*/}
+        {/*    onDrinkSelect={handleDrinkSelect}*/}
+        {/*    colorBy={colorBy}*/}
+        {/*  />*/}
+        {/*)}*/}
         {activeChart === 'honeycomb' && (
           <HoneycombChart
             data={filteredDrinks}
+            fullData={drinks}
             onDrinkSelect={handleDrinkSelect}
             colorBy={colorBy}
           />
