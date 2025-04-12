@@ -38,14 +38,22 @@ pub async fn get_by_url(collection: &Collection<Drink>, url: String) -> Option<D
 }
 
 pub async fn get_by_urls(collection: &Collection<Drink>, urls: Vec<String>) -> Option<Vec<Drink>> {
-    let mut cursor = collection.find(doc! {"drink_url": {"$in": urls}}, None).await.ok()?;
-    let mut drinks = Vec::new();
+    let mut drinks_map = std::collections::HashMap::new();
+    let mut cursor = collection.find(doc! {"drink_url": {"$in": &urls}}, None).await.ok()?;
 
     while let Some(doc) = cursor.try_next().await.ok()? {
-        drinks.push(doc);
+        let url= doc.drink_url.clone();
+        drinks_map.insert(url, doc);
     }
 
-    Some(drinks)
+    let mut ordered_drinks = Vec::new();
+    for url in urls {
+        if let Some(drink) = drinks_map.remove(&url) {
+            ordered_drinks.push(drink);
+        }
+    }
+
+    Some(ordered_drinks)
 }
 
 pub async fn get_by_tastes(collection: &Collection<Drink>, tastes: Vec<String>) -> Option<Vec<Drink>> {
