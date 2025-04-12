@@ -4,6 +4,7 @@ import Graph from './components/Graph';
 import FlavorExplorer from './components/FlavorExplorer';
 import SimilaritySearch from './components/SimilaritySearch';
 import './App.css';
+import './components/DrinkInfo.css';  // Import the new CSS
 
 function App() {
   const [activeTab, setActiveTab] = useState('graph');

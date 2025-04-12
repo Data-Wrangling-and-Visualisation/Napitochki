@@ -13,6 +13,9 @@ export default function SimilaritySearch() {
     e.preventDefault();
     if (!searchTerm.trim()) return;
     
+    // Reset selected drink when performing a new search
+    setSelectedDrink(null);
+    
     setLoading(true);
     try {
       const data = await findSimilar(searchTerm, numResults);
@@ -57,7 +60,9 @@ export default function SimilaritySearch() {
         </button>
       </form>
 
-      {results.matches && results.matches.length > 0 ? (
+      {loading ? (
+        <div className="loading-results">Searching for drinks...</div>
+      ) : results.matches && results.matches.length > 0 ? (
         <div className="search-results">
           <h3>Search Results</h3>
           <table className="results-table">

@@ -12,17 +12,20 @@ export default function FlavorExplorer() {
   const [selectedTastes, setSelectedTastes] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [selectedDrink, setSelectedDrink] = useState(null);
-  const [loading, setLoading] = useState(true);
+  
+  // Separate loading states
+  const [tastesLoading, setTastesLoading] = useState(true);
+  const [drinksLoading, setDrinksLoading] = useState(false);
 
   useEffect(() => {
     async function fetchTastes() {
       try {
         const tasteData = await getAllTastes();
         setTastes(tasteData);
-        setLoading(false);
+        setTastesLoading(false);
       } catch (error) {
         console.error('Error fetching tastes:', error);
-        setLoading(false);
+        setTastesLoading(false);
       }
     }
     
@@ -30,6 +33,9 @@ export default function FlavorExplorer() {
   }, []);
 
   useEffect(() => {
+    // Reset selected drink when filters change
+    setSelectedDrink(null);
+    
     if (selectedTastes.length > 0) {
       fetchDrinksByTastes();
     } else {
@@ -39,14 +45,14 @@ export default function FlavorExplorer() {
 
   const fetchDrinksByTastes = async () => {
     try {
-      setLoading(true);
+      setDrinksLoading(true);
       const drinkData = await getDrinkByTastes(selectedTastes);
       setDrinks(drinkData);
-      setLoading(false);
+      setDrinksLoading(false);
     } catch (error) {
       console.error('Error fetching drinks by tastes:', error);
       setDrinks([]);
-      setLoading(false);
+      setDrinksLoading(false);
     }
   };
 
@@ -67,7 +73,7 @@ export default function FlavorExplorer() {
       <div className="taste-filter">
         <h2>Filter by Flavors</h2>
         <div className="taste-buttons">
-          {loading ? <p>Loading tastes...</p> : (
+          {tastesLoading ? <p>Loading tastes...</p> : (
             tastes.map(taste => (
               <button 
                 key={taste}
@@ -83,7 +89,7 @@ export default function FlavorExplorer() {
 
       <div className="drinks-list">
         <h2>Drinks with Selected Flavors</h2>
-        {loading && selectedTastes.length > 0 ? (
+        {drinksLoading ? (
           <p>Loading drinks...</p>
         ) : drinks.length > 0 ? (
           <ul>
