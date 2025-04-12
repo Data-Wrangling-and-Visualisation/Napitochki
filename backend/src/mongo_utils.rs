@@ -37,6 +37,17 @@ pub async fn get_by_url(collection: &Collection<Drink>, url: String) -> Option<D
     collection.find_one(doc! {"drink_url": url}, None).await.ok()?
 }
 
+pub async fn get_by_urls(collection: &Collection<Drink>, urls: Vec<String>) -> Option<Vec<Drink>> {
+    let mut cursor = collection.find(doc! {"drink_url": {"$in": urls}}, None).await.ok()?;
+    let mut drinks = Vec::new();
+
+    while let Some(doc) = cursor.try_next().await.ok()? {
+        drinks.push(doc);
+    }
+
+    Some(drinks)
+}
+
 pub async fn get_by_tastes(collection: &Collection<Drink>, tastes: Vec<String>) -> Option<Vec<Drink>> {
     let mut cursor = collection.find(doc! {"taste": {"$all": tastes}}, None).await.ok()?;
     let mut drinks = Vec::new();

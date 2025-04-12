@@ -4,9 +4,9 @@ mod chroma_utils;
 mod clip;
 mod categories; 
 
-use model::Drink;
-use mongo_utils::{get_mongo_client, get_drinks, get_by_name, get_by_url, get_by_tastes};  
-use chroma_utils::{get_chroma_client, SimilarityResponse};
+use model::{Drink, DrinkQuery, SimilarityExtendedResponse};
+use mongo_utils::{get_mongo_client, get_drinks, get_by_name, get_by_url, get_by_urls, get_by_tastes};  
+use chroma_utils::{get_chroma_client};
 use clip::get_text_embedding;   
 
 use strum::IntoEnumIterator;
@@ -25,21 +25,12 @@ use mongodb::{Collection};
 
 use axum::{routing::{post}, Router, Json, extract::{State, Query}};
 use axum::extract::Json as AxumJson;
-use serde::Deserialize;
 use tower_http::cors::{Any, CorsLayer};
 
 struct AppState {
     mongo_collection: Collection<Drink>,
     chroma_client: ChromaClient,
     model: Arc<Embedder>,
-}
-
-
-#[derive(Deserialize)]
-struct DrinkQuery {
-    name: Option<String>,
-    drink_url: Option<String>,
-    taste: Option<Vec<String>>,
 }
 
 async fn get_drink_handler(
@@ -105,12 +96,12 @@ async fn get_embedding(
 async fn chroma_similarity_search(
     State(state): State<Arc<AppState>>, 
     AxumJson(body): AxumJson<HashMap<String, serde_json::Value>>
-) -> Json<SimilarityResponse> {
+) -> Json<SimilarityExtendedResponse> {
     let prompt = match body.get("prompt") {
         Some(serde_json::Value::String(p)) => p.clone(),
         _ => {
-            return Json(SimilarityResponse {
-                uris: vec![],
+            return Json(SimilarityExtendedResponse {
+                drinks: vec![],
                 distances: vec![],
             });
         }
@@ -120,13 +111,20 @@ async fn chroma_similarity_search(
         .and_then(|v| v.as_u64())
         .unwrap_or(10) as usize;
 
-    let client = &state.chroma_client; 
+    let chroma_client = &state.chroma_client; 
+    let mongo_collection = &state.mongo_collection;
     let model = &state.model;
 
     let embedding = get_text_embedding(model, prompt).await; 
     
-    let similarity_response = chroma_utils::simiilarity_search(client, "drinks_text", embedding, n_results).await;
-    return Json(similarity_response); 
+    let similarity_response = chroma_utils::simiilarity_search(chroma_client, "drinks_text", embedding, n_results).await;
+
+    let drinks_data = get_by_urls(mongo_collection, similarity_response.uris).await.unwrap();
+
+    return Json(SimilarityExtendedResponse{
+        drinks: drinks_data, 
+        distances: similarity_response.distances
+    }); 
 }
 
 
