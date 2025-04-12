@@ -23,9 +23,10 @@ use axum::http::StatusCode;
 
 use mongodb::{Collection};
 
-use axum::{routing::{get}, Router, Json, extract::{State, Query}};
+use axum::{routing::{post}, Router, Json, extract::{State, Query}};
 use axum::extract::Json as AxumJson;
 use serde::Deserialize;
+use tower_http::cors::{Any, CorsLayer};
 
 struct AppState {
     mongo_collection: Collection<Drink>,
@@ -160,12 +161,18 @@ async fn main() {
         model: Arc::new(model),
     });
 
+    let cors = CorsLayer::new()
+        .allow_origin(Any)
+        .allow_methods(Any) 
+        .allow_headers(Any); 
+
     let app = Router::new()
-        .route("/drinks", get(get_drink_handler))
-        .route("/tastes", get(get_tastes))
-        .route("/find_similar", get(chroma_similarity_search))
-        .route("/embeddings", get(get_embedding))
-        .with_state(state);
+        .route("/drinks", post(get_drink_handler))
+        .route("/tastes", post(get_tastes))
+        .route("/find_similar", post(chroma_similarity_search))
+        .route("/embeddings", post(get_embedding))
+        .with_state(state)
+        .layer(cors);
 
     axum::Server::bind(&"0.0.0.0:8888".parse().unwrap())
         .serve(app.into_make_service())
