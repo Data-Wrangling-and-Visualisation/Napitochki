@@ -1,0 +1,21 @@
+/* src/index.css */
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.app {
+  display: flex;
+}
+
+svg {
+  flex: 3;
+  border: 1px solid #ccc;
+}
+
+.sidebar {
+  flex: 1;
+  padding: 1rem;
+  border-left: 1px solid #ccc;
+  background: #f9f9f9;
+}
