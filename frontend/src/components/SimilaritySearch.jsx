@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { findSimilar } from '../api/drinks';
 import DrinkInfo from './DrinkInfo';
 
 export default function SimilaritySearch() {
   const [searchTerm, setSearchTerm] = useState('');
   const [numResults, setNumResults] = useState(5);
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState(null);
   const [selectedDrink, setSelectedDrink] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +28,36 @@ export default function SimilaritySearch() {
   };
 
   const handleSelectDrink = (drink) => {
-    setSelectedDrink([drink.document]); // Wrap in array for DrinkInfo
+    setSelectedDrink([drink]); // Wrap in array for DrinkInfo
+  };
+
+  // Find the maximum distance in the current results set
+  const maxDistance = useMemo(() => {
+    if (!results || !results.distances || results.distances.length === 0) {
+      return 1; // Default value if no distances
+    }
+    return Math.max(...results.distances);
+  }, [results]);
+
+  // Calculate bar width for distance visualization
+  // Smaller distances = more similar = longer bars
+  const calculateBarWidth = (distance) => {
+    if (maxDistance === 0) return 95; // Avoid division by zero
+    
+    // Smaller distances get longer bars
+    const normalizedValue = 1 - (distance / maxDistance);
+    return Math.min(95, Math.max(5, normalizedValue * 100));
+  };
+
+  // Format the distance for display
+  const formatDistance = (distance) => {
+    // For very small distances, show scientific notation
+    if (distance < 0.001) {
+      return distance.toExponential(2);
+    }
+    
+    // For larger distances, show fixed decimal
+    return distance.toFixed(4);
   };
 
   return (
@@ -62,29 +91,29 @@ export default function SimilaritySearch() {
 
       {loading ? (
         <div className="loading-results">Searching for drinks...</div>
-      ) : results.matches && results.matches.length > 0 ? (
+      ) : results && results.drinks && results.drinks.length > 0 ? (
         <div className="search-results">
           <h3>Search Results</h3>
           <table className="results-table">
             <thead>
               <tr>
                 <th>Drink</th>
-                <th>Similarity</th>
+                <th>Distance</th>
               </tr>
             </thead>
             <tbody>
-              {results.matches.map((result) => (
+              {results.drinks.map((drink, index) => (
                 <tr 
-                  key={result.document.name} 
-                  onClick={() => handleSelectDrink(result)}
+                  key={drink.name} 
+                  onClick={() => handleSelectDrink(drink)}
                   className="result-row"
                 >
-                  <td>{result.document.name}</td>
+                  <td>{drink.name}</td>
                   <td>
-                    {(1 - result.distance).toFixed(2)}
+                    {formatDistance(results.distances[index])}
                     <div 
                       className="similarity-bar" 
-                      style={{ width: `${(1 - result.distance) * 100}%` }}
+                      style={{ width: `${calculateBarWidth(results.distances[index])}%` }}
                     ></div>
                   </td>
                 </tr>
@@ -93,7 +122,7 @@ export default function SimilaritySearch() {
           </table>
         </div>
       ) : (
-        results.matches && <p>No drinks found for your search criteria.</p>
+        results && <p>No drinks found for your search criteria.</p>
       )}
 
       {selectedDrink && (
