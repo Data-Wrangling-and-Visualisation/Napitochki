@@ -1,12 +1,6 @@
-use serde::{Serialize, Deserialize};
 use chromadb::client::{ChromaAuthMethod, ChromaClient, ChromaClientOptions, ChromaTokenHeader};
 use chromadb::collection::{QueryOptions, QueryResult};
-
-#[derive(Serialize, Deserialize)]
-pub struct SimilarityResponse {
-    pub uris: Vec<String>,
-    pub distances: Vec<f32>,
-}
+use crate::model::SimilarityResponse; 
 
 
 pub async fn get_chroma_client() -> ChromaClient {
