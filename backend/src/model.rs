@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Drink {
@@ -8,6 +9,8 @@ pub struct Drink {
     pub image_url: String, 
     pub drink_url: String, 
     pub taste: Vec<String>, 
+    pub cluster: i32, 
+    pub position: HashMap<String, Vec<f32>>, 
 }
 
 #[derive(Deserialize)]

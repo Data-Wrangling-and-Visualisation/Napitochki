@@ -139,7 +139,7 @@ async fn main() {
     // init mongo connection
     let mongo_db_connection = get_mongo_client().await;
     let collection: Collection<Drink> = mongo_db_connection.collection("drinks"); 
-
+    
     // init chroma client
     let chroma_client = get_chroma_client().await;
 
