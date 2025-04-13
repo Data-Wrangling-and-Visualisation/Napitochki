@@ -1,20 +1,34 @@
-// src/components/visualizations/HoneycombChart.jsx
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { hexbin } from 'd3-hexbin';
 import './HoneycombChart.css';
-import { getClusterLabel } from '../../utils/clusterDescriptions';
 
-const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) => {
+const getClusterLabel = (cluster) => {
+  const clusterLabels = {
+    0: "Sweet & Fruity",
+    1: "Rich & Creamy",
+    2: "Citrus & Refreshing",
+    3: "Spiced & Aromatic",
+    4: "Floral & Delicate",
+    5: "Tropical & Exotic",
+    6: "Minty & Fresh",
+    7: "Herbal & Botanical",
+    // Add more clusters as needed
+  };
+  
+  return clusterLabels[cluster] || `Cluster ${cluster}`;
+};
+
+const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', getClusterLabel, embeddingType = 'combined' }) => {
   const svgRef = useRef(null);
 
   useEffect(() => {
     if (!data || data.length === 0) return;
 
-    // Очистка предыдущей визуализации
+    // Clear previous visualization
     d3.select(svgRef.current).selectAll("*").remove();
 
-    // Настройка размеров
+    // Setup dimensions
     const width = 800;
     const height = 600;
     const legendWidth = 180;
@@ -23,23 +37,16 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
       .attr("width", width + legendWidth)
       .attr("height", height);
 
-    // Создаем группу для масштабируемого содержимого
+    // Create group for zoomable content
     const zoomableGroup = svg.append("g")
       .attr("class", "zoomable-group")
       .attr("transform", `translate(20, 20)`);
 
-    const fullXExtent = d3.extent(fullData, d => d.tsne_x);
-    const fullYExtent = d3.extent(fullData, d => d.tsne_y);
+    // Use full data extent for consistent scaling
+    const fullXExtent = d3.extent(fullData || data, d => d.x || 0);
+    const fullYExtent = d3.extent(fullData || data, d => d.y || 0);
 
-    // Настройка масштабов
-    // const xScale = d3.scaleLinear()
-    //   .domain(d3.extent(data, d => d.tsne_x))
-    //   .range([0, width - 40]);
-    //
-    // const yScale = d3.scaleLinear()
-    //   .domain(d3.extent(data, d => d.tsne_y))
-    //   .range([height - 40, 0]);
-
+    // Setup scales
     const xScale = d3.scaleLinear()
       .domain(fullXExtent)
       .range([0, width - 40]);
@@ -48,7 +55,19 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
       .domain(fullYExtent)
       .range([height - 40, 0]);
 
-    // Определяем цветовую схему в зависимости от выбранного параметра
+    // Helper function to get the appropriate cluster based on embedding type
+    const getClusterForEmbedding = (drink) => {
+      if (!drink.cluster) return null;
+      
+      // Handle both object format and simple number format
+      if (typeof drink.cluster === 'object') {
+        return drink.cluster[embeddingType] !== undefined ? drink.cluster[embeddingType] : null;
+      }
+      
+      return drink.cluster; // For backward compatibility
+    };
+
+    // Define color scheme based on selected parameter
     let colorDomain;
     let colorValueFunction;
 
@@ -66,7 +85,7 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
         };
         break;
       case 'taste':
-        { const allTastes = data.map(d =>
+        const allTastes = data.map(d =>
           d.taste && d.taste.length >= 1 ? d.taste[0] : 'N/A'
         );
         colorDomain = [...new Set(allTastes)];
@@ -82,14 +101,22 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
             (a, b) => tasteCounts[a] > tasteCounts[b] ? a : b, Object.keys(tasteCounts)[0]
           );
         };
-        break; }
+        break;
       case 'cluster':
       default:
-        colorDomain = [...new Set(data.map(d => d.cluster))].sort((a, b) => a - b);
+        // Extract clusters for the current embedding type
+        // Fix: Don't use filter(Boolean) as it removes cluster 0
+        colorDomain = [...new Set(data.map(d => getClusterForEmbedding(d)))]
+          .filter(c => c !== null && c !== undefined)
+          .sort((a, b) => a - b);
+          
         colorValueFunction = (items) => {
           const clusterCounts = {};
           items.forEach(item => {
-            clusterCounts[item.cluster] = (clusterCounts[item.cluster] || 0) + 1;
+            const cluster = getClusterForEmbedding(item);
+            if (cluster !== undefined && cluster !== null) {
+              clusterCounts[cluster] = (clusterCounts[cluster] || 0) + 1;
+            }
           });
           let maxCluster = null;
           let maxCount = 0;
@@ -104,6 +131,8 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
         break;
     }
 
+    // Define color palettes
+    const clusterColors = d3.schemeSpectral[8] || d3.schemeTableau10;
     const colorPalette = [];
     for (let i = 0; i < 25; i++) {
       colorPalette.push(d3.interpolateRainbow(i / 25));
@@ -111,29 +140,26 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
 
     const colorScale = d3.scaleOrdinal()
       .domain(colorDomain)
-      .range(d3.schemeSpectral[colorDomain.length] || colorPalette);
+      .range(colorBy === 'cluster' ? clusterColors : d3.schemeSpectral[colorDomain.length] || colorPalette);
 
-    // Создание подсказки
+    // Create tooltip
     const tooltip = d3.select("body")
       .append("div")
       .attr("class", "tooltip")
-      .style("position", "absolute")
-      .style("background", "white")
-      .style("padding", "8px")
-      .style("border-radius", "4px")
-      .style("border", "1px solid #ccc")
-      .style("pointer-events", "none")
       .style("opacity", 0);
 
-    // Функция для получения статистики кластера
+    // Function to get cluster statistics
     const getClusterStats = (items) => {
-      // Считаем напитки по кластерам
+      // Count drinks by clusters
       const clusterCounts = {};
       items.forEach(item => {
-        clusterCounts[item.cluster] = (clusterCounts[item.cluster] || 0) + 1;
+        const cluster = getClusterForEmbedding(item);
+        if (cluster !== undefined && cluster !== null) {
+          clusterCounts[cluster] = (clusterCounts[cluster] || 0) + 1;
+        }
       });
 
-      // Собираем самые частые вкусы в кластере
+      // Count drinks by taste
       const tasteCounts = {};
       items.forEach(item => {
         if (item.taste && item.taste.length) {
@@ -143,7 +169,7 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
         }
       });
 
-      // Сортируем вкусы по частоте
+      // Sort tastes by frequency
       const topTastes = Object.entries(tasteCounts)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 3)
@@ -160,30 +186,37 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
       };
     };
 
-    // Функция для создания и отрисовки шестиугольников с учетом текущего масштаба
-    // Функция для создания и отрисовки шестиугольников с учетом текущего масштаба
+    // Function to render hexagons
     const renderHexagons = (scale) => {
-      // Очищаем текущие шестиугольники и тексты с количеством
+      // Clear current hexagons and text counts
       zoomableGroup.selectAll(".hexagon, .hexagon-count, .drink-point").remove();
 
-      // Динамический радиус соты в зависимости от масштаба
+      // Dynamic hex radius based on scale
       const baseRadius = 15;
       const radius = scale >= 2.5 ? baseRadius / (scale / 2) : baseRadius;
 
-      // Если масштаб больше определенного значения, переключаемся на отдельные напитки
+      // If scale is large enough, switch to individual drinks
       if (scale >= 5) {
-        // Отрисовка индивидуальных напитков как маленьких кружков
+        // Render individual drinks as small circles
         zoomableGroup.selectAll(".drink-point")
           .data(data)
           .enter()
           .append("circle")
           .attr("class", "drink-point hexagon")
-          .attr("cx", d => xScale(d.tsne_x))
-          .attr("cy", d => yScale(d.tsne_y))
+          .attr("cx", d => xScale(d.x || 0))
+          .attr("cy", d => yScale(d.y || 0))
           .attr("r", 4)
-          .attr("fill", d => colorScale(colorBy === 'cluster' ? d.cluster :
-                             colorBy === 'category' ? d.category :
-                             d.taste && d.taste.length ? d.taste[0] : 'N/A'))
+          .attr("fill", d => {
+            if (colorBy === 'cluster') {
+              const cluster = getClusterForEmbedding(d);
+              // Fix: explicitly check for null/undefined, not falsy
+              return cluster !== null && cluster !== undefined ? colorScale(cluster) : "#cccccc";
+            } else if (colorBy === 'category') {
+              return d.category ? colorScale(d.category) : "#cccccc";
+            } else {
+              return d.taste && d.taste.length ? colorScale(d.taste[0]) : "#cccccc";
+            }
+          })
           .attr("stroke", "#fff")
           .attr("stroke-width", 1 / scale)
           .style("cursor", "pointer")
@@ -192,12 +225,18 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
               .duration(200)
               .style("opacity", 0.9);
 
-            tooltip.html(`
-                  <strong>${d.name}</strong><br/>
-                  Кластер: ${getClusterLabel(d.cluster)}<br/>
-                  Вкусы: ${d.taste.join(", ")}<br/>
-                  Категория: ${d.category}
-                `)
+            let tooltipContent = `<strong>${d.name}</strong><br/>`;
+            
+            const cluster = getClusterForEmbedding(d);
+            // Fix: explicitly check for null/undefined, not falsy
+            if (cluster !== undefined && cluster !== null) {
+              tooltipContent += `Cluster: ${getClusterLabel(cluster)} (${cluster})<br/>`;
+            }
+            
+            tooltipContent += `Tastes: ${d.taste ? d.taste.join(", ") : 'N/A'}<br/>`;
+            tooltipContent += `Category: ${d.category ? d.category.replace(/_/g, ' ') : 'N/A'}`;
+
+            tooltip.html(tooltipContent)
               .style("left", (event.pageX + 10) + "px")
               .style("top", (event.pageY - 28) + "px");
           })
@@ -209,32 +248,18 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
           .on("click", (event, d) => {
             if (onDrinkSelect) onDrinkSelect(d);
           });
-
-        // Добавляем текст "1" над каждой точкой
-        // zoomableGroup.selectAll(".point-count")
-        //   .data(data)
-        //   .enter()
-        //   .append("text")
-        //   .attr("class", "hexagon-count")
-        //   .attr("x", d => xScale(d.tsne_x))
-        //   .attr("y", d => yScale(d.tsne_y) - 6)
-        //   .attr("text-anchor", "middle")
-        //   .attr("font-size", 8)
-        //   .attr("fill", "black")
-        //   .attr("pointer-events", "none")
-        //   .text("1");
       } else {
-        // Создание генератора шестиугольников с масштабированным радиусом
+        // Create hexbin generator with scaled radius
         const hexbinGenerator = hexbin()
-          .x(d => xScale(d.tsne_x))
-          .y(d => yScale(d.tsne_y))
+          .x(d => xScale(d.x || 0))
+          .y(d => yScale(d.y || 0))
           .radius(radius)
           .extent([[0, 0], [width - 40, height - 40]]);
 
-        // Группировка данных
+        // Group the data
         const bins = hexbinGenerator(data);
 
-        // Отрисовка шестиугольников
+        // Render hexagons
         zoomableGroup.selectAll(".hexagon")
           .data(bins)
           .enter()
@@ -242,7 +267,11 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
           .attr("class", "hexagon")
           .attr("d", hexbinGenerator.hexagon())
           .attr("transform", d => `translate(${d.x}, ${d.y})`)
-          .attr("fill", d => colorScale(colorValueFunction(d)))
+          .attr("fill", d => {
+            const value = colorValueFunction(d);
+            // Fix: explicitly check for null/undefined, not falsy
+            return value !== null && value !== undefined ? colorScale(value) : "#cccccc";
+          })
           .attr("stroke", "#fff")
           .attr("stroke-width", 1 / scale)
           .style("cursor", "pointer")
@@ -255,32 +284,40 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
               const dominantValue = colorValueFunction(d);
               const stats = getClusterStats(d);
 
-              let tooltipContent = `<strong>${d.length} напитков в группе</strong><br/>`;
-
-              if (colorBy === 'cluster') {
-                tooltipContent += `<u>Распределение по кластерам:</u><br/>`;
-                stats.clusters.forEach(c => {
-                  tooltipContent += `${getClusterLabel(c.cluster)}: ${c.count} (${c.percentage}%)<br/>`;
+              let tooltipContent = `<strong>${d.length} drinks in group</strong><br/>`;
+              
+              // Fix: explicitly check for null/undefined, not falsy
+              if (colorBy === 'cluster' && dominantValue !== null && dominantValue !== undefined) {
+                tooltipContent += `<u>Dominant cluster:</u> ${getClusterLabel(dominantValue)} (${dominantValue})<br/>`;
+                tooltipContent += `<u>Cluster distribution:</u><br/>`;
+                stats.clusters.slice(0, 3).forEach(c => {
+                  tooltipContent += `${getClusterLabel(c.cluster)} (${c.cluster}): ${c.count} (${c.percentage}%)<br/>`;
                 });
               } else if (colorBy === 'category') {
-                tooltipContent += `Преобладающая категория: ${dominantValue}<br/>`;
+                tooltipContent += `Dominant category: ${(dominantValue || '').replace(/_/g, ' ')}<br/>`;
               } else if (colorBy === 'taste') {
-                tooltipContent += `Преобладающий вкус: ${dominantValue}<br/>`;
+                tooltipContent += `Dominant taste: ${dominantValue || 'N/A'}<br/>`;
               }
 
-              tooltipContent += `<br/><u>Топ вкусы:</u> ${stats.topTastes.join(", ")}<br/>`;
+              tooltipContent += `<br/><u>Top tastes:</u> ${stats.topTastes.join(", ") || 'N/A'}<br/>`;
 
               tooltip.html(tooltipContent)
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 28) + "px");
             } else {
               const drink = d[0];
-              tooltip.html(`
-                    <strong>${drink.name}</strong><br/>
-                    Кластер: ${getClusterLabel(drink.cluster)}<br/>
-                    Вкусы: ${drink.taste.join(", ")}<br/>
-                    Категория: ${drink.category}
-                  `)
+              let tooltipContent = `<strong>${drink.name}</strong><br/>`;
+              
+              const cluster = getClusterForEmbedding(drink);
+              // Fix: explicitly check for null/undefined, not falsy
+              if (cluster !== undefined && cluster !== null) {
+                tooltipContent += `Cluster: ${getClusterLabel(cluster)} (${cluster})<br/>`;
+              }
+              
+              tooltipContent += `Tastes: ${drink.taste ? drink.taste.join(", ") : 'N/A'}<br/>`;
+              tooltipContent += `Category: ${drink.category ? drink.category.replace(/_/g, ' ') : 'N/A'}`;
+
+              tooltip.html(tooltipContent)
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 28) + "px");
             }
@@ -296,8 +333,7 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
             }
           });
 
-        // Добавляем отображение числа напитков для всех шестиугольников
-        // если больше 2 напитков
+        // Add count text for hexagons with multiple drinks
         zoomableGroup.selectAll(".hexagon-count")
           .data(bins)
           .enter()
@@ -313,24 +349,21 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
       }
     };
 
-    // Начальная отрисовка шестиугольников
+    // Initial hexagon rendering
     renderHexagons(1);
 
-    // Функция зума с пересчетом шестиугольников
+    // Zoom function with hexagon recalculation
     const zoom = d3.zoom()
-      .scaleExtent([1, 10]) // минимальный и максимальный масштаб
+      .scaleExtent([1, 10])
       .on("zoom", (event) => {
-        // Обновляем трансформацию группы
         zoomableGroup.attr("transform", event.transform);
-
-        // Перерисовываем шестиугольники с учетом нового масштаба
         renderHexagons(event.transform.k);
       });
 
-    // Применяем зум к SVG
+    // Apply zoom to SVG
     svg.call(zoom);
 
-    // При двойном клике сбрасываем зум
+    // Reset zoom on double click
     svg.on("dblclick.zoom", null)
       .on("dblclick", () => {
         svg.transition()
@@ -338,7 +371,10 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
           .call(zoom.transform, d3.zoomIdentity);
       });
 
-    // Добавление легенды (не масштабируемая часть)
+    // Debug: log the domain to check if 0 is included
+    console.log("Color domain:", colorDomain);
+
+    // Add legend (non-scalable part)
     const legend = svg.append("g")
       .attr("transform", `translate(${width - 10}, 20)`);
 
@@ -350,6 +386,12 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
     }
 
     sortedDomain.forEach((value, i) => {
+      // Fix: explicitly check for null/undefined, not falsy
+      if (value === undefined || value === null) return;
+      
+      // Debug: log each value to check if 0 makes it here
+      console.log("Legend value:", value, typeof value);
+      
       legend.append("rect")
         .attr("x", 0)
         .attr("y", i * 20)
@@ -359,9 +401,9 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
 
       let legendText;
       if (colorBy === 'cluster') {
-        legendText = getClusterLabel(value);
+        legendText = getClusterLabel ? `${getClusterLabel(value)} (${value})` : `Cluster ${value}`;
       } else {
-        legendText = value;
+        legendText = colorBy === 'category' ? value.replace(/_/g, ' ') : value;
       }
 
       legend.append("text")
@@ -371,27 +413,34 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster' }) 
         .style("font-size", "11px");
     });
 
-    // Добавление инструкции по использованию зума
+    // Add usage instructions
     svg.append("text")
       .attr("x", 20)
       .attr("y", height - 20)
-      .text("Scroll to zoom")
+      .text("Scroll to zoom, Double-click to reset")
       .attr("font-size", "12px")
       .attr("fill", "#666");
 
-    // Информация о режимах масштабирования
-    svg.append("text")
-      .attr("x", 20)
-      .attr("y", height - 5)
-      .attr("font-size", "10px")
-      .attr("fill", "#666");
+    // Add embedding type info if showing clusters
+    if (colorBy === 'cluster') {
+      svg.append("text")
+        .attr("x", 20)
+        .attr("y", height - 5)
+        .text(`Showing ${embeddingType} clusters`)
+        .attr("font-size", "12px")
+        .attr("fill", "#666");
+    }
 
+    return () => {
+      // Cleanup tooltip on unmount
+      tooltip.remove();
+    };
 
-  }, [data, onDrinkSelect, colorBy]);
+  }, [data, fullData, onDrinkSelect, colorBy, getClusterLabel, embeddingType]);
 
   return (
     <div className="honeycomb-container">
-      <h3>Honeycomb</h3>
+      <h3>Drink Flavor Network Visualization</h3>
       <svg ref={svgRef}></svg>
     </div>
   );
