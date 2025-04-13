@@ -1,4 +1,5 @@
-const BASE_URL = "http://89.169.174.146:8888";
+// Base path for API requests - uses Vite's proxy
+const API_PATH = "/api";
 
 // Helper function to convert taste case from UPPERCASE to Title Case
 function convertTasteCase(taste) {
@@ -6,7 +7,7 @@ function convertTasteCase(taste) {
 }
 
 export async function getAllDrinks() {
-  const res = await fetch(`${BASE_URL}/drinks`, {
+  const res = await fetch(`${API_PATH}/drinks`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({})
@@ -15,7 +16,7 @@ export async function getAllDrinks() {
 }
 
 export async function getDrinkByName(name) {
-  const res = await fetch(`${BASE_URL}/drinks`, {
+  const res = await fetch(`${API_PATH}/drinks`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name }),
@@ -27,7 +28,7 @@ export async function getDrinkByTastes(tastes) {
   // Convert all taste strings to Title Case
   const formattedTastes = tastes.map(taste => convertTasteCase(taste));
   
-  const res = await fetch(`${BASE_URL}/drinks`, {
+  const res = await fetch(`${API_PATH}/drinks`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ taste: formattedTastes }),
@@ -36,7 +37,7 @@ export async function getDrinkByTastes(tastes) {
 }
 
 export async function findSimilar(prompt, n = 10) {
-  const res = await fetch(`${BASE_URL}/find_similar`, {
+  const res = await fetch(`${API_PATH}/find_similar`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt, n_results: n }),
@@ -45,7 +46,7 @@ export async function findSimilar(prompt, n = 10) {
 }
 
 export async function getAllTastes() {
-  const res = await fetch(`${BASE_URL}/tastes`, {
+  const res = await fetch(`${API_PATH}/tastes`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });

@@ -3,22 +3,6 @@ import * as d3 from 'd3';
 import { hexbin } from 'd3-hexbin';
 import './HoneycombChart.css';
 
-const getClusterLabel = (cluster) => {
-  const clusterLabels = {
-    0: "Sweet & Fruity",
-    1: "Rich & Creamy",
-    2: "Citrus & Refreshing",
-    3: "Spiced & Aromatic",
-    4: "Floral & Delicate",
-    5: "Tropical & Exotic",
-    6: "Minty & Fresh",
-    7: "Herbal & Botanical",
-    // Add more clusters as needed
-  };
-  
-  return clusterLabels[cluster] || `Cluster ${cluster}`;
-};
-
 const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', getClusterLabel, embeddingType = 'combined' }) => {
   const svgRef = useRef(null);
 
