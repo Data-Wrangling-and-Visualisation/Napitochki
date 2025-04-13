@@ -19,6 +19,10 @@
     max-width: 300px;
 }
 
+.graph-container .drink-image-container {
+  max-width: 300px;
+}
+
 .image-loader {
   position: absolute;
   top: 0;
