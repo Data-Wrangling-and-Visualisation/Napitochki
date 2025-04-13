@@ -9,7 +9,7 @@ pub struct Drink {
     pub image_url: String, 
     pub drink_url: String, 
     pub taste: Vec<String>, 
-    pub cluster: i32, 
+    pub cluster: HashMap<String, i32>, 
     pub position: HashMap<String, Vec<f32>>, 
 }
 
