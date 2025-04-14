@@ -1,0 +1,131 @@
+.flavor-explorer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.taste-filter {
+  margin-bottom: 1.5rem;
+}
+
+.taste-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.taste-buttons button {
+  padding: 8px 16px;
+  background-color: #f0f8ff;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.taste-buttons button:hover {
+  background-color: #e1f1ff;
+  border-color: #a0d0ff;
+}
+
+.taste-buttons button.selected {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+/* Двухколоночная компоновка с акцентом на детали напитка */
+.explorer-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Увеличиваем ширину колонки с деталями */
+  gap: 20px;
+}
+
+.drink-details-column,
+.drinks-list-column {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* Улучшенные стили для кнопок напитков */
+.drinks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  padding: 0;
+  list-style-type: none;
+  margin: 0;
+}
+
+.drinks-grid li {
+  padding: 12px 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  border: 1px solid #eee;
+  font-size: 0.95rem;
+}
+
+.drinks-grid li:hover {
+  background-color: #f0f8ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.drinks-grid li.active {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .explorer-content {
+    grid-template-columns: 1fr;
+  }
+
+  .drinks-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
+
+/*.flavor-explorer .drink-image-container {*/
+/*  max-width: 300px;*/
+/*  max-height: 300px;*/
+/*  margin: 0 auto;*/
+/*}*/
+
+/*.flavor-explorer .drink-image {*/
+/*  max-height: 300px;*/
+/*  object-fit: contain;*/
+/*}*/
+
+.flavor-explorer .drink-image {
+  max-height: 700px;
+  max-width: 100%;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.flavor-explorer .drink-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
