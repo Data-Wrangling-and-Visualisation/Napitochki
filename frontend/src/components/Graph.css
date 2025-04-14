@@ -1,20 +1,26 @@
 .graph-container {
-  padding: 1.5rem;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  /* make the container broader */
+    width: 100%;
+}
+
+.visualization-content {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .visualization-wrapper {
-  border: 1px solid #eee;
-  /* center*/
-    margin: 0 auto;
-  display: flex;
-  border-radius: 6px;
-  padding: 20px;
-  margin-bottom: 20px;
-  min-height: 600px;
-  background-color: white;
+  flex: 2;
+  min-width: 0; /* Предотвращает переполнение контента */
+}
+
+.visualization-wrapper > div:first-child {
+  flex: 3;
 }
 
 .controls {
@@ -52,6 +58,14 @@
   gap: 20px;
 }
 
+.selected-drink-info {
+  flex: 1;
+  max-width: 700px;
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+}
+
 .loading-indicator {
   display: flex;
   justify-content: center;
@@ -64,20 +78,26 @@
 }
 
 .selected-drink-info {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  flex: 1;
+  max-width: 500px;
+  position: sticky;
+  top: 20px;
 }
 
 /* Mobile responsiveness */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .controls {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
-  
+  .selected-drink-info {
+    max-width: 100%;
+  }
+  .visualization-wrapper {
+    flex-direction: column;
+  }
+
   .filters {
     flex-direction: column;
     align-items: flex-start;
@@ -91,4 +111,46 @@
   .filter-select {
     width: 100%;
   }
+
+  .visualization-content {
+    flex-direction: column;
+  }
+
+  .selected-drink-info {
+    max-width: 100%;
+    position: static;
+  }
+}
+
+/* Добавьте эти стили в конец Graph.css */
+.embedding-buttons button {
+  position: relative;
+}
+
+.embedding-buttons button:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.embedding-buttons button:hover::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+  z-index: 100;
 }

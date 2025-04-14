@@ -144,18 +144,22 @@ export default function Graph() {
               <button
                   className={embeddingType === 'text' ? 'active' : ''}
                   onClick={() => handleEmbeddingTypeChange('text')}
+                  data-tooltip="Text embeddings based on drink tastes"
+
               >
                 Text
               </button>
               <button
                   className={embeddingType === 'image' ? 'active' : ''}
                   onClick={() => handleEmbeddingTypeChange('image')}
+                    data-tooltip="Image embeddings based on visual appearance"
               >
                 Image
               </button>
               <button
                   className={embeddingType === 'combined' ? 'active' : ''}
                   onClick={() => handleEmbeddingTypeChange('combined')}
+                    data-tooltip="Combined embeddings based on both tastes and visual features"
               >
                 Combined
               </button>
@@ -171,45 +175,30 @@ export default function Graph() {
           </div>
       ) : (
           <div className="visualization-area">
-            <div className="embedding-info">
-              <h3>Current View: {embeddingType.charAt(0).toUpperCase() + embeddingType.slice(1)} Embedding</h3>
-              <p>
-                {embeddingType === 'text' && 'Grouping drinks based on recipe text and descriptions'}
-                {embeddingType === 'image' && 'Grouping drinks based on visual appearance'}
-                {embeddingType === 'combined' && 'Grouping drinks based on both text and visual features'}
-              </p>
-            </div>
 
-            {/*<HoneycombChart */}
-            {/*  data={processedDrinks}*/}
-            {/*  fullData={processedDrinks}*/}
-            {/*  onDrinkSelect={handleDrinkSelect}*/}
-            {/*  colorBy={colorBy}*/}
-            {/*  getClusterLabel={getClusterLabel}*/}
-            {/*  embeddingType={embeddingType}*/}
-            {/*/>*/}
-
-            <div className="visualization-wrapper">
-              {visualizationType === 'honeycomb' ? (
-                  <HoneycombChart
-                      data={processedDrinks}
-                      fullData={processedDrinks}
-                      onDrinkSelect={handleDrinkSelect}
-                      colorBy={colorBy}
-                      getClusterLabel={getClusterLabel}
-                      embeddingType={embeddingType}
-                  />
-              ) : (
-                  <ScatterPlot
-                      data={filteredDrinks}
-                      onDrinkSelect={handleDrinkSelect}
-                      selectedDrink={selectedDrink}
-                      colorBy={colorBy}
-                      getClusterLabel={getClusterLabel}
-                      embeddingType={embeddingType}
-                  />
-              )}
-            </div>
+            <div className="visualization-content">
+              <div className="visualization-wrapper">
+                {visualizationType === 'honeycomb' ? (
+                    <HoneycombChart
+                        data={processedDrinks}
+                        fullData={processedDrinks}
+                        onDrinkSelect={handleDrinkSelect}
+                        colorBy={colorBy}
+                        getClusterLabel={getClusterLabel}
+                        embeddingType={embeddingType}
+                        selectedDrink={selectedDrink}
+                    />
+                ) : (
+                    <ScatterPlot
+                        data={filteredDrinks}
+                        onDrinkSelect={handleDrinkSelect}
+                        selectedDrink={selectedDrink}
+                        colorBy={colorBy}
+                        getClusterLabel={getClusterLabel}
+                        embeddingType={embeddingType}
+                    />
+                )}
+              </div>
 
               {selectedDrink && (
                   <div className="selected-drink-info">
@@ -217,6 +206,7 @@ export default function Graph() {
                     <DrinkInfo drinkData={selectedDrink}/>
                   </div>
               )}
+            </div>
             </div>
             )}
           </div>

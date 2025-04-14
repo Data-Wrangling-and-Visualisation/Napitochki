@@ -46,66 +46,67 @@ export default function DrinkInfo({ drinkData }) {
     [];
 
   return (
-    <div className="drink-info">
-      <h3>{drink.name}</h3>
-      
-      <div className="drink-image-container">
-        {imageLoading && (
-          <div className="image-loader">
-            <div className="spinner"></div>
+      <div className="drink-info">
+        <h3>{drink.name}</h3>
+        <div className="drink-image-and-tastes">
+          <div className="drink-image-container">
+            {imageLoading && (
+                <div className="image-loader">
+                  <div className="spinner"></div>
+                </div>
+            )}
+
+            {drink.image_url && (
+                <img
+                    src={drink.image_url}
+                    alt={drink.name}
+                    className={`drink-image ${imageLoading ? 'loading' : 'loaded'}`}
+                    onLoad={handleImageLoad}
+                />
+            )}
           </div>
-        )}
-        
-        {drink.image_url && (
-          <img 
-            src={drink.image_url} 
-            alt={drink.name}
-            className={`drink-image ${imageLoading ? 'loading' : 'loaded'}`}
-            onLoad={handleImageLoad}
-          />
-        )}
-      </div>
-      
-      {drink.taste && drink.taste.length > 0 && (
-        <div className="drink-tastes">
-          <h4>Flavor Profile</h4>
-          <div className="taste-tags">
-            {drink.taste.map(taste => (
-              <span key={taste} className="taste-tag">{taste}</span>
-            ))}
-          </div>
+
+          {drink.taste && drink.taste.length > 0 && (
+              <div className="drink-tastes">
+                <h4>Flavor Profile</h4>
+                <div className="taste-tags">
+                  {drink.taste.map(taste => (
+                      <span key={taste} className="taste-tag">{taste}</span>
+                  ))}
+                </div>
+              </div>
+          )}
         </div>
-      )}
-      
-      {ingredients && ingredients.length > 0 && (
-        <div className="drink-ingredients">
-          <h4>Ingredients</h4>
-          <ul>
-            {ingredients.map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
-          </ul>
+
+          {ingredients && ingredients.length > 0 && (
+              <div className="drink-ingredients">
+                <h4>Ingredients</h4>
+                <ul>
+                  {ingredients.map((ingredient, index) => (
+                      <li key={index}>{ingredient}</li>
+                  ))}
+                </ul>
+              </div>
+          )}
+
+          {instructions && instructions.length > 0 && (
+              <div className="drink-recipe">
+                <h4>Instructions</h4>
+                <ol className="recipe-steps">
+                  {instructions.map((step, index) => (
+                      <li key={index}>{step}</li>
+                  ))}
+                </ol>
+              </div>
+          )}
+
+          {drink.drink_url && (
+              <div className="drink-link">
+                <a href={drink.drink_url} target="_blank" rel="noopener noreferrer">
+                  View Original Recipe
+                </a>
+              </div>
+          )}
         </div>
-      )}
-      
-      {instructions && instructions.length > 0 && (
-        <div className="drink-recipe">
-          <h4>Instructions</h4>
-          <ol className="recipe-steps">
-            {instructions.map((step, index) => (
-              <li key={index}>{step}</li>
-            ))}
-          </ol>
-        </div>
-      )}
-      
-      {drink.drink_url && (
-        <div className="drink-link">
-          <a href={drink.drink_url} target="_blank" rel="noopener noreferrer">
-            View Original Recipe
-          </a>
-        </div>
-      )}
-    </div>
-  );
-}
+        );
+        }

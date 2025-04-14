@@ -12,7 +12,8 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>Napitochki - Drink Flavor Explorer</h1>
+        <h1>Napitochki</h1>
+          <h3>Drink Flavor Explorer</h3>
         <nav className="nav-tabs">
           <button 
             className={`tab-button ${activeTab === 'graph' ? 'active' : ''}`}
@@ -42,7 +43,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Napitochki - Drink visualization application</p>
+        <p>Three Bibkas @</p>
       </footer>
     </div>
   );

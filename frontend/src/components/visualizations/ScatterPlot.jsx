@@ -24,7 +24,7 @@ const ScatterPlot = ({
     // const height = 600 - margin.top - margin.bottom;
 
     const width = 800;
-    const height = 600;
+    const height = 700;
     const legendWidth = 180;
 
     const svg = d3.select(svgRef.current)
@@ -201,6 +201,21 @@ const ScatterPlot = ({
         if (onDrinkSelect) onDrinkSelect(d);
       });
 
+    // Добавление выделения для выбранного напитка
+    // svg.selectAll(".selected-highlight")
+    //   .data(selectedDrink ? [selectedDrink[0]] : [])
+    //   .enter()
+    //   .append("circle")
+    //   .attr("class", "selected-highlight")
+    //   .attr("cx", d => xScale(getX(d)))
+    //   .attr("cy", d => yScale(getY(d)))
+    //   .attr("r", 12)
+    //   .attr("fill", "none")
+    //   .attr("stroke", "#ff4500")
+    //   .attr("stroke-width", 2)
+    //   .attr("stroke-dasharray", "3,3")
+    //   .attr("opacity", 0.8);
+
     // Добавление легенды
     const legend = svg.append("g")
       .attr("transform", `translate(${width + 20}, 0)`);
@@ -209,8 +224,8 @@ const ScatterPlot = ({
       .attr("x", 0)
       .attr("y", -20)
       .attr("font-weight", "bold")
-      .text(`Цвет по: ${colorBy === 'cluster' ? 'кластеру' : 
-             colorBy === 'category' ? 'категории' : 'вкусу'}`);
+      .text(`COlor by: ${colorBy === 'cluster' ? 'cluster' : 
+             colorBy === 'category' ? 'category' : 'taste'}`);
 
     const sortedDomain = [...colorDomain].sort((a, b) => {
       if (colorBy === 'cluster') return a - b;
@@ -227,7 +242,7 @@ const ScatterPlot = ({
 
       let legendText;
       if (colorBy === 'cluster') {
-        legendText = getClusterLabel ? `${getClusterLabel(value)} (${value})` : `Кластер ${value}`;
+        legendText = getClusterLabel ? `${getClusterLabel(value)} (${value})` : `CLuster ${value}`;
       } else {
         legendText = colorBy === 'category' ? value.replace(/_/g, ' ') : value;
       }

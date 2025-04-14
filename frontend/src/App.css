@@ -8,67 +8,119 @@ body {
   color: #333;
 }
 
+/*.app-container {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  min-height: 100vh;*/
+/*}*/
+
 .app-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   min-height: 100vh;
 }
 
 /* Заголовок */
+/*.app-header {*/
+/*  background-color: #bed7e8;*/
+/*  color: #232f3d;*/
+/*  padding: 1rem 0;*/
+/*  box-shadow: 0 2px 5px rgba(0,0,0,0.1);*/
+/*  text-align: center;*/
+/*  !* bold *!*/
+/*    font-weight: 600;*/
+/*}*/
+
 .app-header {
-  background-color: #bed7e8;
-  color: #232f3d;
-  padding: 1.2rem 0;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  text-align: center;
-  /* bold */
-    font-weight: 600;
+  width: 130px;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
 }
 
+/*.app-header h1 {*/
+/*  margin: 0;*/
+/*  font-size: 2rem;*/
+/*  font-weight: 600;*/
+/*  letter-spacing: 0.5px;*/
+/*}*/
+
 .app-header h1 {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-align: left;
 }
+
+/*.nav-tabs {*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  gap: 1rem;*/
+/*  margin-top: 1rem;*/
+/*}*/
 
 .nav-tabs {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
 }
+
+/*.tab-button {*/
+/*  padding: 0.5rem 1rem;*/
+/*  background-color: transparent;*/
+/*  border: 1px solid rgba(255, 255, 255, 0.3);*/
+/*  color: white;*/
+/*  cursor: pointer;*/
+/*  border-radius: 4px;*/
+/*  transition: all 0.2s;*/
+/*  font-size: 0.9rem;*/
+/*}*/
 
 .tab-button {
-  padding: 0.5rem 1rem;
-  background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  cursor: pointer;
+  padding: 0.75rem 1rem;
+  text-align: left;
   border-radius: 4px;
-  transition: all 0.2s;
-  font-size: 0.9rem;
+  border: none;
+  background-color: transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
+
+/*.tab-button:hover {*/
+/*  background-color: rgba(255, 255, 255, 0.15);*/
+/*  border-color: rgba(255, 255, 255, 0.5);*/
+/*}*/
 
 .tab-button:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
+/*.tab-button.active {*/
+/*  background-color: white;*/
+/*  color: #2c7bb6;*/
+/*  font-weight: 500;*/
+/*  border-color: white;*/
+/*}*/
+
 .tab-button.active {
-  background-color: white;
-  color: #2c7bb6;
-  font-weight: 500;
-  border-color: white;
+  background-color: #3498db;
+  color: white;
 }
 
 /* Основной контент */
+/*.app-content {*/
+/*  flex: 1;*/
+/*  !*padding: 2rem;*!*/
+/*  max-width: 1500px;*/
+/*  margin: 0 auto;*/
+/*  width: 100%;*/
+/*}*/
+
 .app-content {
   flex: 1;
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
+  /*padding: 1rem;*/
+  overflow-y: auto;
 }
 
 /* Стили для графиков */
@@ -337,12 +389,22 @@ body {
 }
 
 /* Подвал */
+/*.app-footer {*/
+/*  background-color: #bed7e8;*/
+/*  color: white;*/
+/*  text-align: center;*/
+/*  padding: 1.25rem;*/
+/*  margin-top: 2rem;*/
+/*}*/
+
 .app-footer {
-  background-color: #bed7e8;
-  color: white;
-  text-align: center;
-  padding: 1.25rem;
-  margin-top: 2rem;
+  /*text-align: center;*/
+  padding: 0.5rem;
+  background-color: #f5f5f5;
+  border-top: 1px solid #ddd;
+  font-size: 0.8rem;
+  color: #666;
+  max-width: 130px;
 }
 
 /* Адаптивные стили */

@@ -3,8 +3,9 @@ import * as d3 from 'd3';
 import { hexbin } from 'd3-hexbin';
 import './HoneycombChart.css';
 
-const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', getClusterLabel, embeddingType = 'combined' }) => {
+const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', getClusterLabel, embeddingType = 'combined', selectedDrink }) => {
   const svgRef = useRef(null);
+  const zoomTransformRef = useRef(null);
 
   useEffect(() => {
     if (!data || data.length === 0) return;
@@ -14,7 +15,7 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
 
     // Setup dimensions
     const width = 800;
-    const height = 600;
+    const height = 700;
     const legendWidth = 180;
 
     const svg = d3.select(svgRef.current)
@@ -42,13 +43,19 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
     // Helper function to get the appropriate cluster based on embedding type
     const getClusterForEmbedding = (drink) => {
       if (!drink.cluster) return null;
-      
+
       // Handle both object format and simple number format
       if (typeof drink.cluster === 'object') {
         return drink.cluster[embeddingType] !== undefined ? drink.cluster[embeddingType] : null;
       }
-      
+
       return drink.cluster; // For backward compatibility
+    };
+
+    // Helper function to check if a bin contains the selected drink
+    const binContainsSelectedDrink = (bin) => {
+      if (!selectedDrink || !selectedDrink[0]) return false;
+      return bin.some(drink => drink.name === selectedDrink[0].name);
     };
 
     // Define color scheme based on selected parameter
@@ -93,7 +100,7 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
         colorDomain = [...new Set(data.map(d => getClusterForEmbedding(d)))]
           .filter(c => c !== null && c !== undefined)
           .sort((a, b) => a - b);
-          
+
         colorValueFunction = (items) => {
           const clusterCounts = {};
           items.forEach(item => {
@@ -186,10 +193,11 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
           .data(data)
           .enter()
           .append("circle")
-          .attr("class", "drink-point hexagon")
+          .attr("class", d => selectedDrink && selectedDrink[0] && d.name === selectedDrink[0].name ?
+                "drink-point hexagon selected" : "drink-point hexagon")
           .attr("cx", d => xScale(d.x || 0))
           .attr("cy", d => yScale(d.y || 0))
-          .attr("r", 4)
+          .attr("r", d => selectedDrink && selectedDrink[0] && d.name === selectedDrink[0].name ? 6 : 4)
           .attr("fill", d => {
             if (colorBy === 'cluster') {
               const cluster = getClusterForEmbedding(d);
@@ -201,8 +209,8 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
               return d.taste && d.taste.length ? colorScale(d.taste[0]) : "#cccccc";
             }
           })
-          .attr("stroke", "#fff")
-          .attr("stroke-width", 1 / scale)
+          .attr("stroke", d => selectedDrink && selectedDrink[0] && d.name === selectedDrink[0].name ? "#000" : "#fff")
+          .attr("stroke-width", d => selectedDrink && selectedDrink[0] && d.name === selectedDrink[0].name ? 2 : 1 / scale)
           .style("cursor", "pointer")
           .on("mouseover", (event, d) => {
             tooltip.transition()
@@ -210,13 +218,13 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
               .style("opacity", 0.9);
 
             let tooltipContent = `<strong>${d.name}</strong><br/>`;
-            
+
             const cluster = getClusterForEmbedding(d);
             // Fix: explicitly check for null/undefined, not falsy
             if (cluster !== undefined && cluster !== null) {
               tooltipContent += `Cluster: ${getClusterLabel(cluster)} (${cluster})<br/>`;
             }
-            
+
             tooltipContent += `Tastes: ${d.taste ? d.taste.join(", ") : 'N/A'}<br/>`;
             tooltipContent += `Category: ${d.category ? d.category.replace(/_/g, ' ') : 'N/A'}`;
 
@@ -248,7 +256,7 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
           .data(bins)
           .enter()
           .append("path")
-          .attr("class", "hexagon")
+          .attr("class", d => binContainsSelectedDrink(d) ? "hexagon selected" : "hexagon")
           .attr("d", hexbinGenerator.hexagon())
           .attr("transform", d => `translate(${d.x}, ${d.y})`)
           .attr("fill", d => {
@@ -256,8 +264,8 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
             // Fix: explicitly check for null/undefined, not falsy
             return value !== null && value !== undefined ? colorScale(value) : "#cccccc";
           })
-          .attr("stroke", "#fff")
-          .attr("stroke-width", 1 / scale)
+          .attr("stroke", d => binContainsSelectedDrink(d) ? "#000" : "#fff")
+          .attr("stroke-width", d => binContainsSelectedDrink(d) ? 2 : 1 / scale)
           .style("cursor", "pointer")
           .on("mouseover", (event, d) => {
             tooltip.transition()
@@ -269,7 +277,7 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
               const stats = getClusterStats(d);
 
               let tooltipContent = `<strong>${d.length} drinks in group</strong><br/>`;
-              
+
               // Fix: explicitly check for null/undefined, not falsy
               if (colorBy === 'cluster' && dominantValue !== null && dominantValue !== undefined) {
                 tooltipContent += `<u>Dominant cluster:</u> ${getClusterLabel(dominantValue)} (${dominantValue})<br/>`;
@@ -291,13 +299,13 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
             } else {
               const drink = d[0];
               let tooltipContent = `<strong>${drink.name}</strong><br/>`;
-              
+
               const cluster = getClusterForEmbedding(drink);
               // Fix: explicitly check for null/undefined, not falsy
               if (cluster !== undefined && cluster !== null) {
                 tooltipContent += `Cluster: ${getClusterLabel(cluster)} (${cluster})<br/>`;
               }
-              
+
               tooltipContent += `Tastes: ${drink.taste ? drink.taste.join(", ") : 'N/A'}<br/>`;
               tooltipContent += `Category: ${drink.category ? drink.category.replace(/_/g, ' ') : 'N/A'}`;
 
@@ -313,9 +321,23 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
           })
           .on("click", (event, d) => {
             if (d.length === 1 && onDrinkSelect) {
+              d3.selectAll(".hexagon").classed("selected", false)
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 1 / (scale || 1))
+                .attr("stroke-opacity", 0.5);
+
+              // Выделяем выбранный
+              d3.select(event.currentTarget)
+                .classed("selected", true)
+                .attr("stroke", "#000")
+                .attr("stroke-width", 2 / (scale || 1))
+                .attr("stroke-opacity", 1)
+                .raise(); // Поднимаем выбранный шестиугольник наверх
               onDrinkSelect(d[0]);
             }
           });
+
+        zoomableGroup.selectAll(".hexagon.selected").raise();
 
         // Add count text for hexagons with multiple drinks
         zoomableGroup.selectAll(".hexagon-count")
@@ -340,6 +362,7 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
     const zoom = d3.zoom()
       .scaleExtent([1, 10])
       .on("zoom", (event) => {
+        zoomTransformRef.current = event.transform;
         zoomableGroup.attr("transform", event.transform);
         renderHexagons(event.transform.k);
       });
@@ -347,9 +370,14 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
     // Apply zoom to SVG
     svg.call(zoom);
 
+    if (zoomTransformRef.current) {
+      svg.call(zoom.transform, zoomTransformRef.current);
+    }
+
     // Reset zoom on double click
     svg.on("dblclick.zoom", null)
       .on("dblclick", () => {
+        zoomTransformRef.current = d3.zoomIdentity; // Сбрасываем сохраненную трансформацию
         svg.transition()
           .duration(750)
           .call(zoom.transform, d3.zoomIdentity);
@@ -372,10 +400,10 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
     sortedDomain.forEach((value, i) => {
       // Fix: explicitly check for null/undefined, not falsy
       if (value === undefined || value === null) return;
-      
+
       // Debug: log each value to check if 0 makes it here
       console.log("Legend value:", value, typeof value);
-      
+
       legend.append("rect")
         .attr("x", 0)
         .attr("y", i * 20)
@@ -420,7 +448,7 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
       tooltip.remove();
     };
 
-  }, [data, fullData, onDrinkSelect, colorBy, getClusterLabel, embeddingType]);
+  }, [data, fullData, colorBy, getClusterLabel, embeddingType, onDrinkSelect, selectedDrink]);
 
   return (
     <div className="honeycomb-container">
