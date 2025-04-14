@@ -1,314 +1,269 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import './ScatterPlot.css';
-import { getClusterLabel } from '../../utils/clusterDescriptions';
 
-const ScatterPlot = ({ data, onDrinkSelect, selectedDrink, colorBy = 'cluster' }) => {
-  const svgRef = useRef();
-  const tooltipRef = useRef(null);
-  // Массив для хранения всех кликнутых напитков
-  const [clickedDrinks, setClickedDrinks] = useState([]);
+const ScatterPlot = ({
+  data,
+  onDrinkSelect,
+  selectedDrink,
+  colorBy = 'cluster',
+  getClusterLabel,
+  embeddingType = 'combined'
+}) => {
+  const svgRef = useRef(null);
 
   useEffect(() => {
     if (!data || data.length === 0) return;
 
-    const margin = { top: 20, right: 20, bottom: 40, left: 40 };
-    const width = 800 - margin.left - margin.right;
-    const height = 600 - margin.top - margin.bottom;
-    const legendWidth = 180;
-
-    // Очищаем предыдущую визуализацию
+    // Очистка предыдущей визуализации
     d3.select(svgRef.current).selectAll("*").remove();
 
-    // Создаем SVG элемент
+    // Настройка размеров
+    // const margin = { top: 40, right: 180, bottom: 50, left: 60 };
+    // const width = 800 - margin.left - margin.right;
+    // const height = 600 - margin.top - margin.bottom;
+
+    const width = 800;
+    const height = 600;
+    const legendWidth = 180;
+
     const svg = d3.select(svgRef.current)
-      .attr("width", width + margin.left + margin.right + legendWidth)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+      .attr("width", width + legendWidth)
+      .attr("height", height);
 
-    // Функция создания tooltip с определенным id
-    const createTooltip = (drinkId) => {
-      // Удаляем существующий тултип с таким id, если он есть
-      d3.select(`#tooltip-${drinkId}`).remove();
+    // Create group for zoomable content
+    // const zoomableGroup = svg.append("g")
+    //   .attr("class", "zoomable-group")
+    //   .attr("transform", `translate(20, 20)`);
+    //
+    // // Use full data extent for consistent scaling
+    // const fullXExtent = d3.extent(fullData || data, d => d.x || 0);
+    // const fullYExtent = d3.extent(fullData || data, d => d.y || 0);
 
-      return d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .attr("id", `tooltip-${drinkId}`)
-        .style("opacity", 0);
+    // Setup scales
+    // const xScale = d3.scaleLinear()
+    //   .domain(fullXExtent)
+    //   .range([0, width - 40]);
+    //
+    // const yScale = d3.scaleLinear()
+    //   .domain(fullYExtent)
+    //   .range([height - 40, 0]);
+
+    // Получение кластера в зависимости от типа эмбеддинга
+    const getClusterForEmbedding = (drink) => {
+      if (!drink.cluster) return null;
+
+      if (typeof drink.cluster === 'object') {
+        return drink.cluster[embeddingType] !== undefined ? drink.cluster[embeddingType] : null;
+      }
+
+      return drink.cluster;
     };
 
-    // Добавляем кнопку сброса в нижний правый угол графика
-    const buttonSize = 32;
-    const resetButton = svg.append("g")
-      .attr("class", "reset-button")
-      .attr("transform", `translate(${width - buttonSize - 10}, ${height - buttonSize - 10})`)
-      .style("cursor", "pointer")
-      .on("click", () => {
-        // Сбрасываем выбранный напиток
-        onDrinkSelect(null);
+    // Получение координат в зависимости от типа эмбеддинга
+    const getX = (d) => {
+      if (d.position && d.position[embeddingType]) {
+        return d.position[embeddingType][0];
+      }
+      return d.tsne_x !== undefined ? d.tsne_x : 0;
+    };
 
-        // Очищаем массив кликнутых напитков
-        setClickedDrinks([]);
+    const getY = (d) => {
+      if (d.position && d.position[embeddingType]) {
+        return d.position[embeddingType][1];
+      }
+      return d.tsne_y !== undefined ? d.tsne_y : 0;
+    };
 
-        // Скрываем и удаляем все тултипы
-        d3.selectAll(".tooltip")
-          .transition()
-          .duration(200)
-          .style("opacity", 0)
-          .remove();
-      });
+    // Настройка шкал
+    const xExtent = d3.extent(data, getX);
+    const yExtent = d3.extent(data, getY);
 
-    // Фон кнопки
-    resetButton.append("rect")
-      .attr("width", buttonSize)
-      .attr("height", buttonSize)
-      .attr("rx", 4)
-      .style("fill", "#f0f0f0")
-      .style("stroke", "#ccc");
-
-    // Иконка перезагрузки
-    resetButton.append("path")
-      .attr("d", "M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z")
-      .attr("transform", `translate(${buttonSize * 0.2}, ${buttonSize * 0.2}) scale(${buttonSize * 0.6/24})`)
-      .style("fill", "#666");
-
-    // Шкалы для осей
     const xScale = d3.scaleLinear()
-      .domain([d3.min(data, d => d.tsne_x) - 5, d3.max(data, d => d.tsne_x) + 5])
+      .domain([xExtent[0] - 5, xExtent[1] + 5])
       .range([0, width]);
 
     const yScale = d3.scaleLinear()
-      .domain([d3.min(data, d => d.tsne_y) - 5, d3.max(data, d => d.tsne_y) + 5])
+      .domain([yExtent[0] - 5, yExtent[1] + 5])
       .range([height, 0]);
 
-    // Оси
+    // Определение цветовой схемы
+    let colorDomain;
+    let colorValueFunction;
+
+    switch(colorBy) {
+      case 'category':
+        colorDomain = [...new Set(data.map(d => d.category))];
+        colorValueFunction = d => d.category;
+        break;
+      case 'taste':
+        const allTastes = data.map(d =>
+          d.taste && d.taste.length >= 1 ? d.taste[0] : 'N/A'
+        );
+        colorDomain = [...new Set(allTastes)];
+        colorValueFunction = d => d.taste && d.taste.length >= 1 ? d.taste[0] : 'N/A';
+        break;
+      case 'cluster':
+      default:
+        // Фильтрация только валидных кластеров (0-7)
+        const validClusters = [0, 1, 2, 3, 4, 5, 6, 7];
+        colorDomain = [...new Set(data.map(d => getClusterForEmbedding(d)))]
+          .filter(c => c !== null && c !== undefined && validClusters.includes(c))
+          .sort((a, b) => a - b);
+
+        colorValueFunction = d => {
+          const cluster = getClusterForEmbedding(d);
+          return validClusters.includes(cluster) ? cluster : null;
+        };
+        break;
+    }
+
+    // Определение цветовой палитры
+    const clusterColors = d3.schemeSpectral[8] || d3.schemeTableau10;
+    const colorScale = d3.scaleOrdinal()
+      .domain(colorDomain)
+      .range(colorBy === 'cluster' ? clusterColors : d3.schemeSpectral[colorDomain.length] || d3.schemeCategory10);
+
+    // Создание всплывающей подсказки
+    const tooltip = d3.select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
+    // Добавление осей X и Y
     svg.append("g")
       .attr("class", "x-axis")
-      .attr("transform", `translate(0,${height})`)
+      .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(xScale));
 
     svg.append("g")
       .attr("class", "y-axis")
       .call(d3.axisLeft(yScale));
 
-    // Подписи к осям
+    // Добавление подписей к осям
     svg.append("text")
       .attr("class", "axis-label")
-      .attr("text-anchor", "middle")
       .attr("x", width / 2)
-      .attr("y", height + margin.top + 20)
-      .text("t-SNE X");
+      .attr("y", height + 40)
+      .attr("text-anchor", "middle")
+      .text(`t-SNE измерение 1 (${embeddingType})`);
 
     svg.append("text")
       .attr("class", "axis-label")
-      .attr("text-anchor", "middle")
       .attr("transform", "rotate(-90)")
-      .attr("x", -(height / 2))
-      .attr("y", -margin.left + 10)
-      .text("t-SNE Y");
+      .attr("x", -height / 2)
+      .attr("y", -40)
+      .attr("text-anchor", "middle")
+      .text(`t-SNE измерение 2 (${embeddingType})`);
 
-    // Цветовая схема
-    let colorDomain;
-    let colorFunction;
-
-    switch(colorBy) {
-      case 'category':
-        colorDomain = [...new Set(data.map(d => d.category))].sort();
-        colorFunction = d => d.category;
-        break;
-      case 'taste':
-        colorDomain = [...new Set(data.flatMap(d =>
-          d.taste && d.taste.length >= 2 ? [`${d.taste[0]}, ${d.taste[1]}`] : ['N/A']
-        ))];
-        colorFunction = d => d.taste && d.taste.length >= 2 ? `${d.taste[0]}, ${d.taste[1]}` : 'N/A';
-        break;
-      case 'cluster':
-      default:
-        colorDomain = [...new Set(data.map(d => d.cluster))].sort((a, b) => a - b);
-        colorFunction = d => d.cluster;
-        break;
-    }
-
-    const colorPalette = [];
-    for (let i = 0; i < 25; i++) {
-      colorPalette.push(d3.interpolateRainbow(i / 25));
-    }
-
-    const colorScale = d3.scaleOrdinal()
-      .domain(colorDomain)
-      .range(d3.schemeSpectral[colorDomain.length] || colorPalette);
-
-    // Функция отображения tooltip
-    const showTooltip = (event, d) => {
-      const drinkId = d.name.replace(/\s+/g, '-');
-
-      // Проверяем, есть ли уже тултип для этого напитка
-      let tooltip = d3.select(`#tooltip-${drinkId}`);
-
-      // Если нет, создаем новый
-      if (tooltip.empty()) {
-        tooltip = createTooltip(drinkId);
-      }
-
-      tooltip.html(`
-        <strong>${d.name}</strong><br/>
-        Кластер: ${getClusterLabel(d.cluster)}<br/>
-        Категория: ${d.category}<br/>
-        Вкус: ${d.taste.join(', ')}
-      `)
-        .style("left", (event.pageX + 10) + "px")
-        .style("top", (event.pageY - 28) + "px")
-        .transition()
-        .duration(200)
-        .style("opacity", .9);
-    };
-
-    // Добавляем точки на график
+    // Добавление точек
     svg.selectAll(".dot")
       .data(data)
       .enter()
       .append("circle")
       .attr("class", "dot")
-      .attr("cx", d => xScale(d.tsne_x))
-      .attr("cy", d => yScale(d.tsne_y))
-      .attr("r", d => selectedDrink && d.name === selectedDrink.name ? 8 : 5)
-      .style("fill", d => colorScale(colorFunction(d)))
-      .style("stroke", d => {
-        // Подсвечиваем текущий выбранный напиток сильнее
-        if (selectedDrink && d.name === selectedDrink.name) return "#000";
-        // Подсвечиваем все кликнутые напитки слабее
-        if (clickedDrinks.some(drink => drink.name === d.name)) return "#666";
-        return "none";
+      .attr("cx", d => xScale(getX(d)))
+      .attr("cy", d => yScale(getY(d)))
+      .attr("r", d => selectedDrink && selectedDrink[0] && d.name === selectedDrink[0].name ? 8 : 5)
+      .attr("fill", d => {
+        const value = colorValueFunction(d);
+        return value !== null && value !== undefined && colorDomain.includes(value)
+          ? colorScale(value)
+          : "#cccccc";
       })
-      .style("stroke-width", d => {
-        if (selectedDrink && d.name === selectedDrink.name) return 2;
-        if (clickedDrinks.some(drink => drink.name === d.name)) return 1;
-        return 0;
-      })
-      .on("mouseover", function(event, d) {
-        d3.select(this)
-          .transition()
+      .attr("stroke", d => selectedDrink && selectedDrink[0] && d.name === selectedDrink[0].name ? "#000" : "#fff")
+      .attr("stroke-width", d => selectedDrink && selectedDrink[0] && d.name === selectedDrink[0].name ? 2 : 1)
+      .on("mouseover", (event, d) => {
+        tooltip.transition()
           .duration(200)
-          .attr("r", 8);
+          .style("opacity", 0.9);
 
-        showTooltip(event, d);
-      })
-      .on("mouseout", function(event, d) {
-        // Для обычных точек - возвращаем к начальному состоянию
-        if (!selectedDrink || d.name !== selectedDrink.name) {
-          if (!clickedDrinks.some(drink => drink.name === d.name)) {
-            d3.select(this)
-              .transition()
-              .duration(200)
-              .attr("r", 5);
+        let tooltipContent = `<strong>${d.name}</strong><br/>`;
 
-            // Скрываем tooltip если точка не кликнута
-            if (!clickedDrinks.some(drink => drink.name === d.name)) {
-              d3.select(`#tooltip-${d.name.replace(/\s+/g, '-')}`)
-                .transition()
-                .duration(200)
-                .style("opacity", 0);
-            }
-          }
+        const cluster = getClusterForEmbedding(d);
+        if (cluster !== undefined && cluster !== null) {
+          tooltipContent += `Кластер: ${getClusterLabel(cluster)} (${cluster})<br/>`;
         }
+
+        tooltipContent += `Вкусы: ${d.taste ? d.taste.join(", ") : 'Н/Д'}<br/>`;
+        tooltipContent += `Категория: ${d.category ? d.category.replace(/_/g, ' ') : 'Н/Д'}`;
+
+        tooltip.html(tooltipContent)
+          .style("left", (event.pageX + 10) + "px")
+          .style("top", (event.pageY - 28) + "px");
+      })
+      .on("mouseout", () => {
+        tooltip.transition()
+          .duration(500)
+          .style("opacity", 0);
       })
       .on("click", (event, d) => {
-        // Проверяем, был ли этот напиток уже кликнут
-        const isAlreadyClicked = clickedDrinks.some(drink => drink.name === d.name);
-
-        // Добавляем в массив кликнутых, если его там еще нет
-        if (!isAlreadyClicked) {
-          setClickedDrinks(prev => [...prev, d]);
-        }
-
-        // Выбираем напиток как текущий
-        onDrinkSelect(d);
-
-        // Показываем tooltip
-        showTooltip(event, d);
+        if (onDrinkSelect) onDrinkSelect(d);
       });
 
-    // Отображаем тултипы для всех кликнутых напитков
-    clickedDrinks.forEach(clickedDrink => {
-      const drinkData = data.find(d => d.name === clickedDrink.name);
-      if (drinkData) {
-        const x = xScale(drinkData.tsne_x);
-        const y = yScale(drinkData.tsne_y);
+    // Добавление легенды
+    const legend = svg.append("g")
+      .attr("transform", `translate(${width + 20}, 0)`);
 
-        const svgRect = svgRef.current.getBoundingClientRect();
-        const fakeEvent = {
-          pageX: x + margin.left + svgRect.left + window.scrollX,
-          pageY: y + margin.top + svgRect.top + window.scrollY
-        };
+    legend.append("text")
+      .attr("x", 0)
+      .attr("y", -20)
+      .attr("font-weight", "bold")
+      .text(`Цвет по: ${colorBy === 'cluster' ? 'кластеру' : 
+             colorBy === 'category' ? 'категории' : 'вкусу'}`);
 
-        showTooltip(fakeEvent, drinkData);
-      }
+    const sortedDomain = [...colorDomain].sort((a, b) => {
+      if (colorBy === 'cluster') return a - b;
+      return String(a).localeCompare(String(b));
     });
 
-    // Отдельно обрабатываем текущий выбранный напиток (чтобы он был сверху)
-    if (selectedDrink) {
-      const drinkData = data.find(d => d.name === selectedDrink.name);
-      if (drinkData) {
-        const x = xScale(drinkData.tsne_x);
-        const y = yScale(drinkData.tsne_y);
-
-        const svgRect = svgRef.current.getBoundingClientRect();
-        const fakeEvent = {
-          pageX: x + margin.left + svgRect.left + window.scrollX,
-          pageY: y + margin.top + svgRect.top + window.scrollY
-        };
-
-        showTooltip(fakeEvent, drinkData);
-      }
-    }
-
-    // Легенда
-    const legend = svg.append("g")
-      .attr("class", "legend")
-      .attr("transform", `translate(${width - 30}, 20)`);
-
-    let sortedDomain = [...colorDomain];
-    if (colorBy === 'cluster') {
-      sortedDomain.sort((a, b) => a - b);
-    } else {
-      sortedDomain.sort();
-    }
-
     sortedDomain.forEach((value, i) => {
-      const legendItem = legend.append("g")
-        .attr("transform", `translate(0, ${i * 20})`);
-
-      legendItem.append("rect")
+      legend.append("rect")
+        .attr("x", 0)
+        .attr("y", i * 20)
         .attr("width", 15)
         .attr("height", 15)
-        .style("fill", colorScale(value));
+        .attr("fill", colorScale(value));
 
       let legendText;
       if (colorBy === 'cluster') {
-        legendText = getClusterLabel(value);
+        legendText = getClusterLabel ? `${getClusterLabel(value)} (${value})` : `Кластер ${value}`;
       } else {
-        legendText = value;
+        legendText = colorBy === 'category' ? value.replace(/_/g, ' ') : value;
       }
 
-      legendItem.append("text")
+      legend.append("text")
         .attr("x", 20)
-        .attr("y", 12)
+        .attr("y", i * 20 + 12)
         .text(legendText)
-        .style("font-size", "11px");
+        .style("font-size", "12px");
     });
 
-    // Очищаем при размонтировании
-    return () => {
-      d3.selectAll(".tooltip").remove();
-    };
+    // Добавление возможности масштабирования
+    const zoom = d3.zoom()
+      .scaleExtent([0.5, 10])
+      .on("zoom", (event) => {
+        svg.selectAll(".dot")
+          .attr("transform", event.transform);
 
-  }, [data, onDrinkSelect, colorBy, selectedDrink, clickedDrinks]);
+        svg.select(".x-axis").call(
+          d3.axisBottom(event.transform.rescaleX(xScale))
+        );
+        svg.select(".y-axis").call(
+          d3.axisLeft(event.transform.rescaleY(yScale))
+        );
+      });
+
+    d3.select(svgRef.current).call(zoom);
+
+    return () => {
+      tooltip.remove();
+    };
+  }, [data, onDrinkSelect, selectedDrink, colorBy, getClusterLabel, embeddingType]);
 
   return (
     <div className="scatter-plot-container">
-      <h3>t-SNE Визуализация напитков</h3>
+      <h3>Individual drinks</h3>
       <svg ref={svgRef}></svg>
     </div>
   );

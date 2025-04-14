@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAllTastes, getDrinkByTastes } from '../api/drinks';
 import DrinkInfo from './DrinkInfo';
+import './FlavorExplorer.css'; // Добавим отдельный CSS файл
 
 // Helper function to convert a taste to title case for display
 function formatTasteForDisplay(taste) {
@@ -12,7 +13,7 @@ export default function FlavorExplorer() {
   const [selectedTastes, setSelectedTastes] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [selectedDrink, setSelectedDrink] = useState(null);
-  
+
   // Separate loading states
   const [tastesLoading, setTastesLoading] = useState(true);
   const [drinksLoading, setDrinksLoading] = useState(false);
@@ -28,14 +29,14 @@ export default function FlavorExplorer() {
         setTastesLoading(false);
       }
     }
-    
+
     fetchTastes();
   }, []);
 
   useEffect(() => {
     // Reset selected drink when filters change
     setSelectedDrink(null);
-    
+
     if (selectedTastes.length > 0) {
       fetchDrinksByTastes();
     } else {
@@ -57,7 +58,7 @@ export default function FlavorExplorer() {
   };
 
   const handleTasteToggle = (taste) => {
-    setSelectedTastes(prev => 
+    setSelectedTastes(prev =>
       prev.includes(taste)
         ? prev.filter(t => t !== taste)
         : [...prev, taste]
@@ -75,7 +76,7 @@ export default function FlavorExplorer() {
         <div className="taste-buttons">
           {tastesLoading ? <p>Loading tastes...</p> : (
             tastes.map(taste => (
-              <button 
+              <button
                 key={taste}
                 onClick={() => handleTasteToggle(taste)}
                 className={selectedTastes.includes(taste) ? 'selected' : ''}
@@ -87,29 +88,36 @@ export default function FlavorExplorer() {
         </div>
       </div>
 
-      <div className="drinks-list">
-        <h2>Drinks with Selected Flavors</h2>
-        {drinksLoading ? (
-          <p>Loading drinks...</p>
-        ) : drinks.length > 0 ? (
-          <ul>
-            {drinks.map(drink => (
-              <li key={drink.name} onClick={() => handleDrinkSelect(drink)}>
-                {drink.name}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>{selectedTastes.length > 0 ? 'No drinks found with these flavors.' : 'Select flavors to see drinks.'}</p>
+      {/* Новый контейнер для двухколоночной компоновки */}
+      <div className="explorer-content">
+        {selectedDrink && (
+          <div className="drink-details-column">
+            <h2>Drink Details</h2>
+            <DrinkInfo drinkData={selectedDrink} />
+          </div>
         )}
-      </div>
 
-      {selectedDrink && (
-        <div className="drink-details">
-          <h2>Drink Details</h2>
-          <DrinkInfo drinkData={selectedDrink} />
+        <div className="drinks-list-column">
+          <h2>Drinks with Selected Flavors</h2>
+          {drinksLoading ? (
+            <p>Loading drinks...</p>
+          ) : drinks.length > 0 ? (
+            <ul className="drinks-grid">
+              {drinks.map(drink => (
+                <li
+                  key={drink.name}
+                  onClick={() => handleDrinkSelect(drink)}
+                  className={selectedDrink && selectedDrink[0]?.name === drink.name ? 'active' : ''}
+                >
+                  {drink.name}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>{selectedTastes.length > 0 ? 'No drinks found with these flavors.' : 'Select flavors to see drinks.'}</p>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

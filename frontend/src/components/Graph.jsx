@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getAllDrinks, getAllTastes } from "../api/drinks";
 import DrinkInfo from "./DrinkInfo";
 import HoneycombChart from "./visualizations/HoneycombChart";
+import ScatterPlot from "./visualizations/ScatterPlot";
 import { getClusterLabel } from "../utils/clusterDescriptions";
 import "./Graph.css";
 
@@ -13,6 +14,7 @@ export default function Graph() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [colorBy, setColorBy] = useState('cluster'); // 'cluster', 'taste', or 'category'
   const [embeddingType, setEmbeddingType] = useState('combined'); // 'text', 'image', or 'combined'
+  const [visualizationType, setVisualizationType] = useState('honeycomb'); // 'honeycomb' или 'scatter'
 
   useEffect(() => {
     async function fetchData() {
@@ -89,58 +91,71 @@ export default function Graph() {
 
   return (
     <div className="graph-container">
-      <h2>Drink Flavor Network</h2>
+      <h2>Drink Flavor Map</h2>
       <p>Explore relationships between drinks based on their flavor profiles, ingredients, and visual appearance</p>
       
       <div className="controls">
         <div className="filters">
           <div className="filter-group">
+            <label>Visualization Type:</label>
+            <select
+                value={visualizationType}
+                onChange={(e) => setVisualizationType(e.target.value)}
+                className="filter-select"
+            >
+              <option value="honeycomb">Honeycomb chart</option>
+              <option value="scatter">Scatter plot</option>
+            </select>
+          </div>
+
+
+          <div className="filter-group">
             <label>Filter by Category:</label>
-            <select 
-              value={activeFilter}
-              onChange={(e) => handleFilterChange(e.target.value)}
-              className="filter-select"
+            <select
+                value={activeFilter}
+                onChange={(e) => handleFilterChange(e.target.value)}
+                className="filter-select"
             >
               <option value="all">All Categories</option>
               {categories.map(category => (
-                <option key={category} value={category}>
-                  {category.replace(/_/g, ' ')}
-                </option>
+                  <option key={category} value={category}>
+                    {category.replace(/_/g, ' ')}
+                  </option>
               ))}
             </select>
           </div>
-          
+
           <div className="filter-group">
             <label>Color By:</label>
             <select
-              value={colorBy}
-              onChange={(e) => setColorBy(e.target.value)}
-              className="filter-select"
+                value={colorBy}
+                onChange={(e) => setColorBy(e.target.value)}
+                className="filter-select"
             >
               <option value="cluster">Flavor Clusters</option>
               <option value="taste">Taste</option>
               <option value="category">Category</option>
             </select>
           </div>
-          
+
           <div className="filter-group embedding-selector">
             <label>Embedding Type:</label>
             <div className="embedding-buttons">
-              <button 
-                className={embeddingType === 'text' ? 'active' : ''} 
-                onClick={() => handleEmbeddingTypeChange('text')}
+              <button
+                  className={embeddingType === 'text' ? 'active' : ''}
+                  onClick={() => handleEmbeddingTypeChange('text')}
               >
                 Text
               </button>
-              <button 
-                className={embeddingType === 'image' ? 'active' : ''} 
-                onClick={() => handleEmbeddingTypeChange('image')}
+              <button
+                  className={embeddingType === 'image' ? 'active' : ''}
+                  onClick={() => handleEmbeddingTypeChange('image')}
               >
                 Image
               </button>
-              <button 
-                className={embeddingType === 'combined' ? 'active' : ''} 
-                onClick={() => handleEmbeddingTypeChange('combined')}
+              <button
+                  className={embeddingType === 'combined' ? 'active' : ''}
+                  onClick={() => handleEmbeddingTypeChange('combined')}
               >
                 Combined
               </button>
@@ -148,40 +163,62 @@ export default function Graph() {
           </div>
         </div>
       </div>
-      
+
       {loading ? (
-        <div className="loading-indicator">
-          <div className="spinner"></div>
-          <span>Loading visualization data...</span>
-        </div>
-      ) : (
-        <div className="visualization-area">
-          <div className="embedding-info">
-            <h3>Current View: {embeddingType.charAt(0).toUpperCase() + embeddingType.slice(1)} Embedding</h3>
-            <p>
-              {embeddingType === 'text' && 'Grouping drinks based on recipe text and descriptions'}
-              {embeddingType === 'image' && 'Grouping drinks based on visual appearance'}
-              {embeddingType === 'combined' && 'Grouping drinks based on both text and visual features'}
-            </p>
+          <div className="loading-indicator">
+            <div className="spinner"></div>
+            <span>Loading visualization data...</span>
           </div>
-          
-          <HoneycombChart 
-            data={processedDrinks}
-            fullData={processedDrinks}
-            onDrinkSelect={handleDrinkSelect}
-            colorBy={colorBy}
-            getClusterLabel={getClusterLabel}
-            embeddingType={embeddingType}
-          />
-          
-          {selectedDrink && (
-            <div className="selected-drink-info">
-              <h3>Selected Drink</h3>
-              <DrinkInfo drinkData={selectedDrink} />
+      ) : (
+          <div className="visualization-area">
+            <div className="embedding-info">
+              <h3>Current View: {embeddingType.charAt(0).toUpperCase() + embeddingType.slice(1)} Embedding</h3>
+              <p>
+                {embeddingType === 'text' && 'Grouping drinks based on recipe text and descriptions'}
+                {embeddingType === 'image' && 'Grouping drinks based on visual appearance'}
+                {embeddingType === 'combined' && 'Grouping drinks based on both text and visual features'}
+              </p>
             </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
+
+            {/*<HoneycombChart */}
+            {/*  data={processedDrinks}*/}
+            {/*  fullData={processedDrinks}*/}
+            {/*  onDrinkSelect={handleDrinkSelect}*/}
+            {/*  colorBy={colorBy}*/}
+            {/*  getClusterLabel={getClusterLabel}*/}
+            {/*  embeddingType={embeddingType}*/}
+            {/*/>*/}
+
+            <div className="visualization-wrapper">
+              {visualizationType === 'honeycomb' ? (
+                  <HoneycombChart
+                      data={processedDrinks}
+                      fullData={processedDrinks}
+                      onDrinkSelect={handleDrinkSelect}
+                      colorBy={colorBy}
+                      getClusterLabel={getClusterLabel}
+                      embeddingType={embeddingType}
+                  />
+              ) : (
+                  <ScatterPlot
+                      data={filteredDrinks}
+                      onDrinkSelect={handleDrinkSelect}
+                      selectedDrink={selectedDrink}
+                      colorBy={colorBy}
+                      getClusterLabel={getClusterLabel}
+                      embeddingType={embeddingType}
+                  />
+              )}
+            </div>
+
+              {selectedDrink && (
+                  <div className="selected-drink-info">
+                    <h3>Selected Drink</h3>
+                    <DrinkInfo drinkData={selectedDrink}/>
+                  </div>
+              )}
+            </div>
+            )}
+          </div>
+      );
+      }

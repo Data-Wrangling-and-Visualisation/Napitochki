@@ -5,6 +5,18 @@
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
+.visualization-wrapper {
+  border: 1px solid #eee;
+  /* center*/
+    margin: 0 auto;
+  display: flex;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+  min-height: 600px;
+  background-color: white;
+}
+
 .controls {
   display: flex;
   justify-content: space-between;

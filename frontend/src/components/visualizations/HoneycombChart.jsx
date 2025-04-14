@@ -424,7 +424,7 @@ const HoneycombChart = ({ data, fullData, onDrinkSelect, colorBy = 'cluster', ge
 
   return (
     <div className="honeycomb-container">
-      <h3>Drink Flavor Network Visualization</h3>
+      <h3>Drink Flavor Map</h3>
       <svg ref={svgRef}></svg>
     </div>
   );

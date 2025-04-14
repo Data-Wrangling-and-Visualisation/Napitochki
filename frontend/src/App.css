@@ -1,47 +1,4 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-/* Base styles */
+/* Базовые стили */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
@@ -57,46 +14,55 @@ body {
   min-height: 100vh;
 }
 
-/* Header styles */
+/* Заголовок */
 .app-header {
-  background-color: #2c3e50;
-  color: white;
-  padding: 1rem 2rem;
+  background-color: #bed7e8;
+  color: #232f3d;
+  padding: 1.2rem 0;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+  /* bold */
+    font-weight: 600;
 }
 
 .app-header h1 {
   margin: 0;
   font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .nav-tabs {
-  margin-top: 1rem;
   display: flex;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .tab-button {
   padding: 0.5rem 1rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: none;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   cursor: pointer;
-  border-radius: 4px 4px 0 0;
-  transition: background-color 0.3s;
+  border-radius: 4px;
+  transition: all 0.2s;
+  font-size: 0.9rem;
 }
 
 .tab-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .tab-button.active {
-  background-color: #fff;
-  color: #2c3e50;
-  font-weight: bold;
+  background-color: white;
+  color: #2c7bb6;
+  font-weight: 500;
+  border-color: white;
 }
 
-/* Content area */
+/* Основной контент */
 .app-content {
   flex: 1;
   padding: 2rem;
@@ -105,40 +71,169 @@ body {
   width: 100%;
 }
 
-/* Graph component */
-.graph-container {
-  background-color: white;
+/* Стили для графиков */
+.graph-container,
+.flavor-explorer,
+.similarity-search,
+.visualization-container {
+  background-color: #fff;
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.visualization-area {
-  display: flex;
-  flex-direction: column;
-}
-
-.flavor-graph {
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   margin-bottom: 1.5rem;
 }
 
-/* Flavor explorer */
-.flavor-explorer {
-  background-color: white;
+/* Элементы управления */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.chart-selector button,
+.visualization-tabs button {
+  padding: 0.6rem 1.2rem;
+  background-color: #f0f8ff;
+  border: none;
+  border-radius: 4px;
+  color: #555;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 0.5rem;
+}
+
+.chart-selector button:hover,
+.visualization-tabs button:hover {
+  background-color: #e1f1ff;
+}
+
+.chart-selector button.active,
+.visualization-tabs button.active {
+  background-color: #2c7bb6;
+  color: white;
+}
+
+/* Фильтры */
+.filters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filters select {
+  padding: 0.6rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Контейнеры для визуализаций */
+.chart-container {
+  background-color: #fff;
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  min-height: 500px;
 }
 
-.taste-filter {
-  grid-column: 1 / -1;
+/* Стили для шестиугольников */
+.hexagon {
+  opacity: 0.8;
+  transition: opacity 0.2s;
 }
 
+.hexagon:hover {
+  opacity: 1;
+  stroke-width: 2px;
+}
+
+/* Стили для точек на графике */
+.dot {
+  cursor: pointer;
+  transition: r 0.2s;
+}
+
+.dot:hover {
+  stroke: #333;
+  stroke-width: 1;
+}
+
+/* Тултипы */
+.tooltip {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Метки осей */
+.axis-label {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Информация о напитке */
+.drink-details {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.drink-details h3 {
+  margin-top: 0;
+  color: #2c7bb6;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.75rem;
+}
+
+.drink-details ul, .drink-details ol {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.drink-details li {
+  margin-bottom: 0.5rem;
+}
+
+/* Панель с напитками */
+.drinks-list {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.drinks-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.drinks-list li {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.drinks-list li:hover {
+  background-color: #f0f8ff;
+  color: #2c7bb6;
+}
+
+/* Кнопки вкусов */
 .taste-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -147,42 +242,24 @@ body {
 }
 
 .taste-buttons button {
-  background-color: #e0e0e0;
+  background-color: #f0f8ff;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s;
+}
+
+.taste-buttons button:hover {
+  background-color: #e1f1ff;
 }
 
 .taste-buttons button.selected {
-  background-color: #3498db;
+  background-color: #2c7bb6;
   color: white;
 }
 
-.drinks-list ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.drinks-list li {
-  padding: 0.5rem 0;
-  cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.drinks-list li:hover {
-  color: #3498db;
-}
-
-/* Similarity search */
-.similarity-search {
-  background-color: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
+/* Форма поиска */
 .search-form {
   margin-bottom: 1.5rem;
 }
@@ -196,33 +273,33 @@ body {
 .search-input {
   flex: 1;
   padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.results-select {
-  padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid #e0e0e0;
   border-radius: 4px;
 }
 
 .search-button {
   padding: 0.75rem 1.5rem;
-  background-color: #3498db;
+  background-color: #2c7bb6;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-button:hover {
+  background-color: #1f6da6;
 }
 
 .search-button:disabled {
-  background-color: #95a5a6;
+  background-color: #aacce8;
+  cursor: not-allowed;
 }
 
+/* Результаты поиска */
 .results-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
 }
 
 .results-table th, .results-table td {
@@ -231,39 +308,60 @@ body {
   border-bottom: 1px solid #e0e0e0;
 }
 
-.result-row {
-  cursor: pointer;
-}
-
 .result-row:hover {
-  background-color: #f9f9f9;
+  background-color: #f0f8ff;
 }
 
 .similarity-bar {
   height: 5px;
-  background-color: #2ecc71;
+  background-color: #2c7bb6;
   margin-top: 5px;
 }
 
-/* Drink info */
-.drink-details {
-  padding: 1rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+/* Состояния загрузки и ошибки */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.25rem;
+  color: #666;
 }
 
-.selected-drink-info {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: #f9f9f9;
+.error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.25rem;
+  color: #e74c3c;
+  background-color: #fff;
   border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
-/* Footer */
+/* Подвал */
 .app-footer {
-  background-color: #2c3e50;
+  background-color: #bed7e8;
   color: white;
   text-align: center;
-  padding: 1rem;
+  padding: 1.25rem;
   margin-top: 2rem;
+}
+
+/* Адаптивные стили */
+@media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filters {
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .search-inputs {
+    flex-direction: column;
+  }
+
+  .flavor-explorer {
+    grid-template-columns: 1fr;
+  }
 }

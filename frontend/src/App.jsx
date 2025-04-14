@@ -18,7 +18,7 @@ function App() {
             className={`tab-button ${activeTab === 'graph' ? 'active' : ''}`}
             onClick={() => setActiveTab('graph')}
           >
-            Flavor Graph
+            Flavor Map
           </button>
           <button 
             className={`tab-button ${activeTab === 'explorer' ? 'active' : ''}`}
