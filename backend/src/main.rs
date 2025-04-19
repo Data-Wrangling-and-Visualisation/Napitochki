@@ -23,9 +23,13 @@ use axum::http::StatusCode;
 
 use mongodb::{Collection};
 
-use axum::{routing::{post}, Router, Json, extract::{State, Query}};
+use std::fs; 
+use serde_json::Value; 
+
+use axum::{routing::{post, get_service}, Router, Json, extract::{State, Query}};
 use axum::extract::Json as AxumJson;
 use tower_http::cors::{Any, CorsLayer};
+use tower_http::services::ServeDir;
 
 struct AppState {
     mongo_collection: Collection<Drink>,
@@ -95,10 +99,10 @@ async fn get_embedding(
 
 async fn chroma_similarity_search(
     State(state): State<Arc<AppState>>, 
-    AxumJson(body): AxumJson<HashMap<String, serde_json::Value>>
+    AxumJson(body): AxumJson<HashMap<String, Value>>
 ) -> Json<SimilarityExtendedResponse> {
     let prompt = match body.get("prompt") {
-        Some(serde_json::Value::String(p)) => p.clone(),
+        Some(Value::String(p)) => p.clone(),
         _ => {
             return Json(SimilarityExtendedResponse {
                 drinks: vec![],
@@ -125,6 +129,27 @@ async fn chroma_similarity_search(
         drinks: drinks_data, 
         distances: similarity_response.distances
     }); 
+}
+
+async fn get_network() -> Result<Json<Value>, StatusCode> {
+    // load the two JSON files
+    let verts = fs::read_to_string("./assets/co_occurrence_vertices.json")
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let edges = fs::read_to_string("./assets/co_occurrence_edges.json")
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    // parse them
+    let vertices: Value =
+        serde_json::from_str(&verts).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let edges: Value =
+        serde_json::from_str(&edges).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    // build combined object
+    let mut map = serde_json::Map::new();
+    map.insert("vertices".to_string(), vertices);
+    map.insert("edges".to_string(), edges);
+
+    Ok(Json(Value::Object(map)))
 }
 
 
@@ -169,6 +194,7 @@ async fn main() {
         .route("/tastes", post(get_tastes))
         .route("/find_similar", post(chroma_similarity_search))
         .route("/embeddings", post(get_embedding))
+        .route("/network", post(get_network))
         .with_state(state)
         .layer(cors);
 

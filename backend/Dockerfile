@@ -26,6 +26,9 @@ RUN cargo build --release
 FROM alpine:3.21.0 as runtime
 RUN apk add --no-cache openssl
 WORKDIR /usr/src/backend
+
 COPY --from=builder /usr/src/backend/target/release/backend .
+COPY assets ./assets
 COPY .env .
+
 CMD [ "./backend" ]
