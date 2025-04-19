@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+/// An object template with recipe details, categorization, and embedding metadata.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Drink {
     pub name: String, 
@@ -13,6 +14,7 @@ pub struct Drink {
     pub position: HashMap<String, Vec<f32>>, 
 }
 
+/// Query parameters for fetching drinks by name, URL, or taste.
 #[derive(Deserialize)]
 pub struct DrinkQuery {
     pub name: Option<String>,
@@ -20,12 +22,15 @@ pub struct DrinkQuery {
     pub taste: Option<Vec<String>>,
 }
 
+
+/// Similarity search response. 
 #[derive(Serialize, Deserialize)]
 pub struct SimilarityResponse {
     pub uris: Vec<String>,
     pub distances: Vec<f32>,
 }
 
+/// Extended similarity response including full drink objects.
 #[derive(Serialize, Deserialize)]
 pub struct SimilarityExtendedResponse {
     pub drinks: Vec<Drink>, 

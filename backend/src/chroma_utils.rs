@@ -3,6 +3,13 @@ use chromadb::collection::{QueryOptions, QueryResult};
 use crate::model::SimilarityResponse; 
 
 
+/// Reads CHROMA_URL and CHROMA_TOKEN from .env, constructs and returns
+/// a configured ChromaClient.
+///
+/// # Panics
+/// - If the .env file cannot be read.
+/// - If required env vars are missing.
+/// - If the client cannot be initialized.
 pub async fn get_chroma_client() -> ChromaClient {
     dotenvy::dotenv().expect("Failed to load .env file");
 
@@ -23,6 +30,10 @@ pub async fn get_chroma_client() -> ChromaClient {
     return client; 
 }
 
+/// Extracts URIs and distances from a QueryResult.
+///
+/// Iterates over metadatas to collect any "uri" fields into a Vec<String>,
+/// and over distances to collect all distance values into a Vec<f32>.
 fn extract_uris_and_distances(query_result: &QueryResult) -> (Vec<String>, Vec<f32>) {
     let mut uris = Vec::new();
     let mut distances = Vec::new();
@@ -52,6 +63,8 @@ fn extract_uris_and_distances(query_result: &QueryResult) -> (Vec<String>, Vec<f
     (uris, distances)
 }
 
+/// Performs a similarity search in the specified Chroma collection using
+/// the provided embedding vector.
 pub async fn simiilarity_search(client: &ChromaClient, collection_name: &str, query: Vec<f32>,  n_results: usize) -> SimilarityResponse {
     let collection = client.get_collection(collection_name).await.unwrap();
 

@@ -31,12 +31,21 @@ use mongo_utils::{
 use model::{Drink, DrinkQuery, SimilarityExtendedResponse};
 
 
+/// Shared application state containing MongoDB collection, Chroma client, 
+/// and embedding model.
 struct AppState {
     mongo_collection: Collection<Drink>,
     chroma_client: ChromaClient,
     model: Arc<Embedder>,
 }
 
+/// Handler for fetching drinks by URL, name, or taste filter.
+/// 
+/// Only one of drink_url, name, or taste may be provided in the JSON body.
+/// Returns:
+/// - 200 + JSON list of matching Drink
+/// - 400 if more than one parameter is passed
+/// - 404 if no matching document is found
 async fn get_drink_handler(
     State(state): State<Arc<AppState>>,
     AxumJson(body): AxumJson<DrinkQuery>,
@@ -72,7 +81,14 @@ async fn get_drink_handler(
     Err(StatusCode::NOT_FOUND)
 }
 
-
+/// Handler for generating a text embedding.
+/// 
+/// Expects a query string "embeddings?text=..." 
+/// 
+/// Returns:
+/// - 200 + JSON array of f32 embedding values
+/// - 404 if an unknown parameter is provided
+/// - 500 on other errors
 async fn get_embedding(
     State(state): State<Arc<AppState>>,
     Query(params): Query<HashMap<String, String>>,
@@ -97,6 +113,13 @@ async fn get_embedding(
     Err(StatusCode::INTERNAL_SERVER_ERROR)
 }
 
+/// Performs a similarity search against the Chroma collection.
+/// 
+/// Body JSON must include:
+/// - "prompt": "<text>"
+/// - optional "n_results": <number>
+///
+/// Returns full Drink objects and their distances.
 async fn chroma_similarity_search(
     State(state): State<Arc<AppState>>, 
     AxumJson(body): AxumJson<HashMap<String, Value>>
@@ -131,6 +154,11 @@ async fn chroma_similarity_search(
     }); 
 }
 
+/// Serves the co‑occurrence network JSON.
+/// 
+/// Reads co_occurrence_vertices.json and co_occurrence_edges.json
+/// from ./assets, wraps them under vertices and edges keys,
+/// and returns the combined object.
 async fn get_network() -> Result<Json<Value>, StatusCode> {
     // load the two JSON files
     let verts = fs::read_to_string("./assets/co_occurrence_vertices.json")
@@ -152,13 +180,15 @@ async fn get_network() -> Result<Json<Value>, StatusCode> {
     Ok(Json(Value::Object(map)))
 }
 
-
+/// Returns the list of all supported taste categories as strings.
 async fn get_tastes()  -> Json<Vec<String>> {
     let tastes: Vec<String> = TasteCategories::iter().map(|taste| taste.as_ref().to_string()).collect();
     return Json(tastes)
 }
 
 
+/// Entrypoint: initializes MongoDB, Chroma client, embedding model,
+/// sets up CORS and routes, then runs the Axum server on 0.0.0.0:8888.
 #[tokio::main]
 async fn main() {
     // init mongo connection
