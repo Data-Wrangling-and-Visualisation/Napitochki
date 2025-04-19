@@ -1,0 +1,1152 @@
+[
+  {
+    "n_id": "Monin Strawberry Purée",
+    "label": "Monin Strawberry Purée",
+    "size": 15,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "fresh lemon juice",
+    "label": "fresh lemon juice",
+    "size": 180,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "black tea",
+    "label": "black tea",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "milk",
+    "label": "milk",
+    "size": 70,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Mango Syrup",
+    "label": "Monin Mango Syrup",
+    "size": 10,
+    "color": [
+      164,
+      230,
+      86
+    ]
+  },
+  {
+    "n_id": "fresh brewed tea",
+    "label": "fresh brewed tea",
+    "size": 15,
+    "color": [
+      164,
+      230,
+      86
+    ]
+  },
+  {
+    "n_id": ". tapioca bobas",
+    "label": ". tapioca bobas",
+    "size": 5,
+    "color": [
+      230,
+      60,
+      157
+    ]
+  },
+  {
+    "n_id": "Monin Black Sugar Syrup",
+    "label": "Monin Black Sugar Syrup",
+    "size": 5,
+    "color": [
+      230,
+      60,
+      157
+    ]
+  },
+  {
+    "n_id": "Monin Black Cherry Purée",
+    "label": "Monin Black Cherry Purée",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "fresh lime juice",
+    "label": "fresh lime juice",
+    "size": 245,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "club soda",
+    "label": "club soda",
+    "size": 90,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "prosecco white wine",
+    "label": "prosecco white wine",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "bitter/herbal aperitif",
+    "label": "bitter/herbal aperitif",
+    "size": 10,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "lemonade",
+    "label": "lemonade",
+    "size": 35,
+    "color": [
+      164,
+      230,
+      86
+    ]
+  },
+  {
+    "n_id": "Monin Yuzu Purée",
+    "label": "Monin Yuzu Purée",
+    "size": 10,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Elderflower Syrup",
+    "label": "Monin Elderflower Syrup",
+    "size": 15,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "orange juice",
+    "label": "orange juice",
+    "size": 25,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "pineapple juice",
+    "label": "pineapple juice",
+    "size": 40,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin French Vanilla Syrup",
+    "label": "Monin French Vanilla Syrup",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "half & half",
+    "label": "half & half",
+    "size": 105,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "dark rum",
+    "label": "dark rum",
+    "size": 10,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "fresh orange juice",
+    "label": "fresh orange juice",
+    "size": 10,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Spiced Brown Sugar Syrup",
+    "label": "Monin Spiced Brown Sugar Syrup",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Gingerbread Syrup",
+    "label": "Monin Gingerbread Syrup",
+    "size": 10,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "coffee liqueur",
+    "label": "coffee liqueur",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Irish cream liqueur",
+    "label": "Irish cream liqueur",
+    "size": 15,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "vodka",
+    "label": "vodka",
+    "size": 55,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "cranberry juice",
+    "label": "cranberry juice",
+    "size": 35,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Pomegranate Syrup",
+    "label": "Monin Pomegranate Syrup",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "triple sec",
+    "label": "triple sec",
+    "size": 10,
+    "color": [
+      106,
+      230,
+      64
+    ]
+  },
+  {
+    "n_id": "orange liqueur",
+    "label": "orange liqueur",
+    "size": 40,
+    "color": [
+      106,
+      230,
+      64
+    ]
+  },
+  {
+    "n_id": "Monin Honey Organic Sweetener",
+    "label": "Monin Honey Organic Sweetener",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "premium gin",
+    "label": "premium gin",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "vanilla vodka",
+    "label": "vanilla vodka",
+    "size": 10,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin White Chocolate Sauce",
+    "label": "Monin White Chocolate Sauce",
+    "size": 15,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "espresso",
+    "label": "espresso",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Pistachio Syrup",
+    "label": "Monin Pistachio Syrup",
+    "size": 15,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Irish Cream Syrup",
+    "label": "Monin Irish Cream Syrup",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "apple juice",
+    "label": "apple juice",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Rock Melon Cantaloupe Syrup",
+    "label": "Monin Rock Melon Cantaloupe Syrup",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Cucumber Syrup",
+    "label": "Monin Cucumber Syrup",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Hibiscus Syrup",
+    "label": "Monin Hibiscus Syrup",
+    "size": 15,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Blueberry Purée",
+    "label": "Monin Blueberry Purée",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Exotic Citrus Syrup",
+    "label": "Monin Exotic Citrus Syrup",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "lemon-lime soda",
+    "label": "lemon-lime soda",
+    "size": 10,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Blue Curacao Syrup",
+    "label": "Monin Blue Curacao Syrup",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "sparkling water",
+    "label": "sparkling water",
+    "size": 10,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Dark Chocolate Sauce",
+    "label": "Monin Dark Chocolate Sauce",
+    "size": 35,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Toasted Marshmallow Syrup",
+    "label": "Monin Toasted Marshmallow Syrup",
+    "size": 15,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Mojito Mix",
+    "label": "Monin Mojito Mix",
+    "size": 20,
+    "color": [
+      164,
+      230,
+      86
+    ]
+  },
+  {
+    "n_id": "Monin Desert Pear® Syrup",
+    "label": "Monin Desert Pear® Syrup",
+    "size": 5,
+    "color": [
+      164,
+      230,
+      86
+    ]
+  },
+  {
+    "n_id": "steamed milk",
+    "label": "steamed milk",
+    "size": 10,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Natural Zero Peach",
+    "label": "Monin Natural Zero Peach",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Granny Smith Apple Purée",
+    "label": "Monin Granny Smith Apple Purée",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "(s) ice",
+    "label": "(s) ice",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Habanero Lime Syrup",
+    "label": "Monin Habanero Lime Syrup",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Wild Blackberry Syrup",
+    "label": "Monin Wild Blackberry Syrup",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Vanilla Syrup",
+    "label": "Monin Vanilla Syrup",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Coconut Syrup",
+    "label": "Monin Coconut Syrup",
+    "size": 10,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Cookie Butter® Syrup",
+    "label": "Monin Cookie Butter® Syrup",
+    "size": 10,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Iced Coffee Concentrate",
+    "label": "Monin Iced Coffee Concentrate",
+    "size": 15,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Ginger Beer Syrup",
+    "label": "Monin Ginger Beer Syrup",
+    "size": 10,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "ginger ale",
+    "label": "ginger ale",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Sugar Free Strawberry Syrup",
+    "label": "Monin Sugar Free Strawberry Syrup",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Guava Purée",
+    "label": "Monin Guava Purée",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Lavender Syrup",
+    "label": "Monin Lavender Syrup",
+    "size": 10,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Coconut Purée",
+    "label": "Monin Coconut Purée",
+    "size": 15,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "ginger beer",
+    "label": "ginger beer",
+    "size": 15,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Cold Brew Coffee Concentrate",
+    "label": "Monin Cold Brew Coffee Concentrate",
+    "size": 10,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Blood Orange Purée",
+    "label": "Monin Blood Orange Purée",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Apple Syrup",
+    "label": "Monin Apple Syrup",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Winter Citrus Syrup",
+    "label": "Monin Winter Citrus Syrup",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "cold brewed coffee",
+    "label": "cold brewed coffee",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Tart Cherry Syrup",
+    "label": "Monin Tart Cherry Syrup",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Almond (Orgeat) Syrup",
+    "label": "Monin Almond (Orgeat) Syrup",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Honey Syrup",
+    "label": "Monin Honey Syrup",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Peanut Butter Syrup",
+    "label": "Monin Peanut Butter Syrup",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "premium dry gin",
+    "label": "premium dry gin",
+    "size": 10,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Peach Purée",
+    "label": "Monin Peach Purée",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Green Mint Syrup",
+    "label": "Monin Green Mint Syrup",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Caramel Apple Butter Syrup",
+    "label": "Monin Caramel Apple Butter Syrup",
+    "size": 10,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "tonic water",
+    "label": "tonic water",
+    "size": 10,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Blood Orange Syrup",
+    "label": "Monin Blood Orange Syrup",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Cinnamon Syrup",
+    "label": "Monin Cinnamon Syrup",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Pure Cane Syrup",
+    "label": "Monin Pure Cane Syrup",
+    "size": 10,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Golden Turmeric Syrup",
+    "label": "Monin Golden Turmeric Syrup",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Maple Spice Syrup",
+    "label": "Monin Maple Spice Syrup",
+    "size": 15,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "water",
+    "label": "water",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "pasteurized egg white",
+    "label": "pasteurized egg white",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "lemon juice",
+    "label": "lemon juice",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "silver tequila",
+    "label": "silver tequila",
+    "size": 25,
+    "color": [
+      106,
+      230,
+      64
+    ]
+  },
+  {
+    "n_id": "sweet & sour mix",
+    "label": "sweet & sour mix",
+    "size": 25,
+    "color": [
+      106,
+      230,
+      64
+    ]
+  },
+  {
+    "n_id": "gin",
+    "label": "gin",
+    "size": 35,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "light rum",
+    "label": "light rum",
+    "size": 25,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Red Sangria Mix",
+    "label": "Monin Red Sangria Mix",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "brandy",
+    "label": "brandy",
+    "size": 10,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "reposado tequila",
+    "label": "reposado tequila",
+    "size": 10,
+    "color": [
+      106,
+      230,
+      64
+    ]
+  },
+  {
+    "n_id": "sparkling wine",
+    "label": "sparkling wine",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Peppermint Syrup",
+    "label": "Monin Peppermint Syrup",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "premium vodka",
+    "label": "premium vodka",
+    "size": 20,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Watermelon Purée",
+    "label": "Monin Watermelon Purée",
+    "size": 15,
+    "color": [
+      106,
+      230,
+      64
+    ]
+  },
+  {
+    "n_id": "bourbon",
+    "label": "bourbon",
+    "size": 15,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "coconut rum",
+    "label": "coconut rum",
+    "size": 10,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "sweet vermouth",
+    "label": "sweet vermouth",
+    "size": 10,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "Monin Cucumber Concentrated Flavor",
+    "label": "Monin Cucumber Concentrated Flavor",
+    "size": 5,
+    "color": [
+      85,
+      230,
+      31
+    ]
+  },
+  {
+    "n_id": "spiced rum",
+    "label": "spiced rum",
+    "size": 5,
+    "color": [
+      25,
+      230,
+      47
+    ]
+  },
+  {
+    "n_id": "Monin Agave Organic Nectar",
+    "label": "Monin Agave Organic Nectar",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "5 leaf(ves) mint",
+    "label": "5 leaf(ves) mint",
+    "size": 5,
+    "color": [
+      164,
+      230,
+      86
+    ]
+  },
+  {
+    "n_id": "tequila",
+    "label": "tequila",
+    "size": 10,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "3 leaf(ves) mint",
+    "label": "3 leaf(ves) mint",
+    "size": 5,
+    "color": [
+      164,
+      230,
+      86
+    ]
+  },
+  {
+    "n_id": "premium silver tequila",
+    "label": "premium silver tequila",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "premium silver rum",
+    "label": "premium silver rum",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "8 leaf(ves) mint",
+    "label": "8 leaf(ves) mint",
+    "size": 10,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin South Seas Blend",
+    "label": "Monin South Seas Blend",
+    "size": 5,
+    "color": [
+      215,
+      230,
+      34
+    ]
+  },
+  {
+    "n_id": "Monin Blackberry Syrup",
+    "label": "Monin Blackberry Syrup",
+    "size": 5,
+    "color": [
+      164,
+      230,
+      86
+    ]
+  }
+]

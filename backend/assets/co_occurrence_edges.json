@@ -1,0 +1,932 @@
+[
+  {
+    "source": "Monin Strawberry Purée",
+    "target": "fresh lemon juice",
+    "weight": 10
+  },
+  {
+    "source": "Monin Strawberry Purée",
+    "target": "milk",
+    "weight": 5
+  },
+  {
+    "source": "Monin Strawberry Purée",
+    "target": "light rum",
+    "weight": 5
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Elderflower Syrup",
+    "weight": 6
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "fresh orange juice",
+    "weight": 6
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Spiced Brown Sugar Syrup",
+    "weight": 7
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "orange liqueur",
+    "weight": 8
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Honey Organic Sweetener",
+    "weight": 7
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "premium gin",
+    "weight": 7
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "cranberry juice",
+    "weight": 11
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "apple juice",
+    "weight": 5
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Hibiscus Syrup",
+    "weight": 6
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Blueberry Purée",
+    "weight": 5
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "sparkling water",
+    "weight": 5
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Wild Blackberry Syrup",
+    "weight": 5
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Pistachio Syrup",
+    "weight": 7
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "club soda",
+    "weight": 31
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "ginger ale",
+    "weight": 8
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Sugar Free Strawberry Syrup",
+    "weight": 5
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Lavender Syrup",
+    "weight": 15
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Apple Syrup",
+    "weight": 6
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Winter Citrus Syrup",
+    "weight": 6
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "orange juice",
+    "weight": 5
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "fresh lime juice",
+    "weight": 5
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Honey Syrup",
+    "weight": 11
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Peach Purée",
+    "weight": 5
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Cinnamon Syrup",
+    "weight": 6
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Golden Turmeric Syrup",
+    "weight": 9
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Maple Spice Syrup",
+    "weight": 5
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "water",
+    "weight": 8
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Pure Cane Syrup",
+    "weight": 9
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "pasteurized egg white",
+    "weight": 10
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "gin",
+    "weight": 22
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "bourbon",
+    "weight": 17
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "vodka",
+    "weight": 13
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "premium dry gin",
+    "weight": 11
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "Monin Caramel Apple Butter Syrup",
+    "weight": 5
+  },
+  {
+    "source": "fresh lemon juice",
+    "target": "premium vodka",
+    "weight": 9
+  },
+  {
+    "source": "black tea",
+    "target": "milk",
+    "weight": 5
+  },
+  {
+    "source": "milk",
+    "target": "Monin Pistachio Syrup",
+    "weight": 5
+  },
+  {
+    "source": "milk",
+    "target": "(s) ice",
+    "weight": 7
+  },
+  {
+    "source": "milk",
+    "target": "Monin Gingerbread Syrup",
+    "weight": 5
+  },
+  {
+    "source": "milk",
+    "target": "Monin Vanilla Syrup",
+    "weight": 6
+  },
+  {
+    "source": "milk",
+    "target": "Monin Dark Chocolate Sauce",
+    "weight": 11
+  },
+  {
+    "source": "milk",
+    "target": "Monin Cookie Butter® Syrup",
+    "weight": 8
+  },
+  {
+    "source": "milk",
+    "target": "Monin Iced Coffee Concentrate",
+    "weight": 6
+  },
+  {
+    "source": "milk",
+    "target": "Monin White Chocolate Sauce",
+    "weight": 9
+  },
+  {
+    "source": "milk",
+    "target": "Monin Peanut Butter Syrup",
+    "weight": 5
+  },
+  {
+    "source": "milk",
+    "target": "Monin Cold Brew Coffee Concentrate",
+    "weight": 5
+  },
+  {
+    "source": "milk",
+    "target": "Monin Green Mint Syrup",
+    "weight": 6
+  },
+  {
+    "source": "milk",
+    "target": "Monin Toasted Marshmallow Syrup",
+    "weight": 7
+  },
+  {
+    "source": "Monin Mango Syrup",
+    "target": "fresh brewed tea",
+    "weight": 6
+  },
+  {
+    "source": "Monin Mango Syrup",
+    "target": "pineapple juice",
+    "weight": 5
+  },
+  {
+    "source": "fresh brewed tea",
+    "target": "lemonade",
+    "weight": 7
+  },
+  {
+    "source": "fresh brewed tea",
+    "target": "Monin Blackberry Syrup",
+    "weight": 6
+  },
+  {
+    "source": ". tapioca bobas",
+    "target": "Monin Black Sugar Syrup",
+    "weight": 5
+  },
+  {
+    "source": "Monin Black Cherry Purée",
+    "target": "fresh lime juice",
+    "weight": 6
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "lemonade",
+    "weight": 9
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Yuzu Purée",
+    "weight": 7
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "club soda",
+    "weight": 30
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "cranberry juice",
+    "weight": 14
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Pomegranate Syrup",
+    "weight": 6
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "triple sec",
+    "weight": 6
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "vodka",
+    "weight": 27
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Rock Melon Cantaloupe Syrup",
+    "weight": 5
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Cucumber Syrup",
+    "weight": 8
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Exotic Citrus Syrup",
+    "weight": 6
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "lemon-lime soda",
+    "weight": 10
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Blue Curacao Syrup",
+    "weight": 8
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "sparkling water",
+    "weight": 8
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Granny Smith Apple Purée",
+    "weight": 5
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Habanero Lime Syrup",
+    "weight": 5
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Guava Purée",
+    "weight": 6
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Coconut Purée",
+    "weight": 10
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "ginger beer",
+    "weight": 23
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "fresh orange juice",
+    "weight": 8
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Blood Orange Purée",
+    "weight": 5
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Hibiscus Syrup",
+    "weight": 5
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Tart Cherry Syrup",
+    "weight": 7
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Almond (Orgeat) Syrup",
+    "weight": 7
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Elderflower Syrup",
+    "weight": 5
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "premium dry gin",
+    "weight": 5
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "tonic water",
+    "weight": 5
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "pineapple juice",
+    "weight": 23
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Pure Cane Syrup",
+    "weight": 21
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "gin",
+    "weight": 14
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "reposado tequila",
+    "weight": 6
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "sweet & sour mix",
+    "weight": 6
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "silver tequila",
+    "weight": 19
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "premium vodka",
+    "weight": 8
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "orange juice",
+    "weight": 8
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "coconut rum",
+    "weight": 7
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "orange liqueur",
+    "weight": 14
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "dark rum",
+    "weight": 7
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "light rum",
+    "weight": 22
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Agave Organic Nectar",
+    "weight": 8
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Watermelon Purée",
+    "weight": 7
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Ginger Beer Syrup",
+    "weight": 6
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "premium silver tequila",
+    "weight": 10
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "tequila",
+    "weight": 13
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "premium silver rum",
+    "weight": 5
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "8 leaf(ves) mint",
+    "weight": 6
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin South Seas Blend",
+    "weight": 5
+  },
+  {
+    "source": "fresh lime juice",
+    "target": "Monin Mojito Mix",
+    "weight": 5
+  },
+  {
+    "source": "club soda",
+    "target": "prosecco white wine",
+    "weight": 6
+  },
+  {
+    "source": "club soda",
+    "target": "bitter/herbal aperitif",
+    "weight": 6
+  },
+  {
+    "source": "club soda",
+    "target": "half & half",
+    "weight": 9
+  },
+  {
+    "source": "club soda",
+    "target": "Monin Natural Zero Peach",
+    "weight": 5
+  },
+  {
+    "source": "club soda",
+    "target": "Monin Ginger Beer Syrup",
+    "weight": 8
+  },
+  {
+    "source": "club soda",
+    "target": "Monin Yuzu Purée",
+    "weight": 5
+  },
+  {
+    "source": "club soda",
+    "target": "Monin Pistachio Syrup",
+    "weight": 5
+  },
+  {
+    "source": "club soda",
+    "target": "lemonade",
+    "weight": 6
+  },
+  {
+    "source": "club soda",
+    "target": "Monin Hibiscus Syrup",
+    "weight": 5
+  },
+  {
+    "source": "club soda",
+    "target": "Monin Blood Orange Syrup",
+    "weight": 5
+  },
+  {
+    "source": "club soda",
+    "target": "orange juice",
+    "weight": 5
+  },
+  {
+    "source": "club soda",
+    "target": "Monin Maple Spice Syrup",
+    "weight": 5
+  },
+  {
+    "source": "club soda",
+    "target": "lemon juice",
+    "weight": 5
+  },
+  {
+    "source": "club soda",
+    "target": "gin",
+    "weight": 5
+  },
+  {
+    "source": "club soda",
+    "target": "vodka",
+    "weight": 8
+  },
+  {
+    "source": "club soda",
+    "target": "premium vodka",
+    "weight": 5
+  },
+  {
+    "source": "bitter/herbal aperitif",
+    "target": "sweet vermouth",
+    "weight": 7
+  },
+  {
+    "source": "lemonade",
+    "target": "Monin Mojito Mix",
+    "weight": 5
+  },
+  {
+    "source": "lemonade",
+    "target": "Monin Desert Pear® Syrup",
+    "weight": 5
+  },
+  {
+    "source": "lemonade",
+    "target": "Monin Lavender Syrup",
+    "weight": 6
+  },
+  {
+    "source": "lemonade",
+    "target": "vodka",
+    "weight": 8
+  },
+  {
+    "source": "Monin Elderflower Syrup",
+    "target": "gin",
+    "weight": 5
+  },
+  {
+    "source": "orange juice",
+    "target": "pineapple juice",
+    "weight": 15
+  },
+  {
+    "source": "orange juice",
+    "target": "cranberry juice",
+    "weight": 6
+  },
+  {
+    "source": "pineapple juice",
+    "target": "cranberry juice",
+    "weight": 7
+  },
+  {
+    "source": "pineapple juice",
+    "target": "Monin Coconut Purée",
+    "weight": 7
+  },
+  {
+    "source": "pineapple juice",
+    "target": "lemon-lime soda",
+    "weight": 6
+  },
+  {
+    "source": "pineapple juice",
+    "target": "coconut rum",
+    "weight": 5
+  },
+  {
+    "source": "pineapple juice",
+    "target": "light rum",
+    "weight": 7
+  },
+  {
+    "source": "Monin French Vanilla Syrup",
+    "target": "half & half",
+    "weight": 6
+  },
+  {
+    "source": "half & half",
+    "target": "dark rum",
+    "weight": 7
+  },
+  {
+    "source": "half & half",
+    "target": "Monin Gingerbread Syrup",
+    "weight": 6
+  },
+  {
+    "source": "half & half",
+    "target": "coffee liqueur",
+    "weight": 6
+  },
+  {
+    "source": "half & half",
+    "target": "Irish cream liqueur",
+    "weight": 15
+  },
+  {
+    "source": "half & half",
+    "target": "vodka",
+    "weight": 7
+  },
+  {
+    "source": "half & half",
+    "target": "vanilla vodka",
+    "weight": 20
+  },
+  {
+    "source": "half & half",
+    "target": "Monin White Chocolate Sauce",
+    "weight": 6
+  },
+  {
+    "source": "half & half",
+    "target": "espresso",
+    "weight": 5
+  },
+  {
+    "source": "half & half",
+    "target": "Monin Irish Cream Syrup",
+    "weight": 9
+  },
+  {
+    "source": "half & half",
+    "target": "Monin Cold Brew Coffee Concentrate",
+    "weight": 6
+  },
+  {
+    "source": "half & half",
+    "target": "Monin Cookie Butter® Syrup",
+    "weight": 6
+  },
+  {
+    "source": "half & half",
+    "target": "Monin Dark Chocolate Sauce",
+    "weight": 16
+  },
+  {
+    "source": "half & half",
+    "target": "cold brewed coffee",
+    "weight": 10
+  },
+  {
+    "source": "half & half",
+    "target": "Monin Caramel Apple Butter Syrup",
+    "weight": 5
+  },
+  {
+    "source": "half & half",
+    "target": "Monin Coconut Syrup",
+    "weight": 5
+  },
+  {
+    "source": "half & half",
+    "target": "Monin Toasted Marshmallow Syrup",
+    "weight": 9
+  },
+  {
+    "source": "half & half",
+    "target": "Monin Peppermint Syrup",
+    "weight": 8
+  },
+  {
+    "source": "half & half",
+    "target": "Monin Iced Coffee Concentrate",
+    "weight": 7
+  },
+  {
+    "source": "half & half",
+    "target": "spiced rum",
+    "weight": 8
+  },
+  {
+    "source": "Irish cream liqueur",
+    "target": "vodka",
+    "weight": 6
+  },
+  {
+    "source": "Irish cream liqueur",
+    "target": "vanilla vodka",
+    "weight": 5
+  },
+  {
+    "source": "vodka",
+    "target": "cranberry juice",
+    "weight": 7
+  },
+  {
+    "source": "vodka",
+    "target": "sweet & sour mix",
+    "weight": 5
+  },
+  {
+    "source": "vodka",
+    "target": "ginger beer",
+    "weight": 11
+  },
+  {
+    "source": "vodka",
+    "target": "Monin Dark Chocolate Sauce",
+    "weight": 6
+  },
+  {
+    "source": "vodka",
+    "target": "orange liqueur",
+    "weight": 5
+  },
+  {
+    "source": "cranberry juice",
+    "target": "orange liqueur",
+    "weight": 7
+  },
+  {
+    "source": "cranberry juice",
+    "target": "brandy",
+    "weight": 10
+  },
+  {
+    "source": "triple sec",
+    "target": "silver tequila",
+    "weight": 9
+  },
+  {
+    "source": "orange liqueur",
+    "target": "silver tequila",
+    "weight": 13
+  },
+  {
+    "source": "orange liqueur",
+    "target": "Monin Watermelon Purée",
+    "weight": 7
+  },
+  {
+    "source": "orange liqueur",
+    "target": "sweet & sour mix",
+    "weight": 6
+  },
+  {
+    "source": "orange liqueur",
+    "target": "tequila",
+    "weight": 6
+  },
+  {
+    "source": "Monin White Chocolate Sauce",
+    "target": "steamed milk",
+    "weight": 5
+  },
+  {
+    "source": "Monin Dark Chocolate Sauce",
+    "target": "Monin Toasted Marshmallow Syrup",
+    "weight": 7
+  },
+  {
+    "source": "Monin Dark Chocolate Sauce",
+    "target": "steamed milk",
+    "weight": 5
+  },
+  {
+    "source": "Monin Dark Chocolate Sauce",
+    "target": "Monin Coconut Syrup",
+    "weight": 6
+  },
+  {
+    "source": "Monin Dark Chocolate Sauce",
+    "target": "Monin Iced Coffee Concentrate",
+    "weight": 5
+  },
+  {
+    "source": "Monin Mojito Mix",
+    "target": "5 leaf(ves) mint",
+    "weight": 9
+  },
+  {
+    "source": "Monin Mojito Mix",
+    "target": "3 leaf(ves) mint",
+    "weight": 5
+  },
+  {
+    "source": "Monin Coconut Purée",
+    "target": "light rum",
+    "weight": 5
+  },
+  {
+    "source": "ginger beer",
+    "target": "premium vodka",
+    "weight": 5
+  },
+  {
+    "source": "tonic water",
+    "target": "gin",
+    "weight": 5
+  },
+  {
+    "source": "Monin Maple Spice Syrup",
+    "target": "bourbon",
+    "weight": 5
+  },
+  {
+    "source": "silver tequila",
+    "target": "sweet & sour mix",
+    "weight": 16
+  },
+  {
+    "source": "silver tequila",
+    "target": "Monin Watermelon Purée",
+    "weight": 5
+  },
+  {
+    "source": "sweet & sour mix",
+    "target": "reposado tequila",
+    "weight": 7
+  },
+  {
+    "source": "gin",
+    "target": "sparkling wine",
+    "weight": 5
+  },
+  {
+    "source": "gin",
+    "target": "Monin Cucumber Concentrated Flavor",
+    "weight": 6
+  },
+  {
+    "source": "light rum",
+    "target": "8 leaf(ves) mint",
+    "weight": 7
+  },
+  {
+    "source": "Monin Red Sangria Mix",
+    "target": "brandy",
+    "weight": 5
+  },
+  {
+    "source": "bourbon",
+    "target": "sweet vermouth",
+    "weight": 5
+  }
+]
