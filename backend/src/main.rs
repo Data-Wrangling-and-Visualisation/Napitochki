@@ -4,32 +4,32 @@ mod chroma_utils;
 mod clip;
 mod categories; 
 
-use model::{Drink, DrinkQuery, SimilarityExtendedResponse};
-use mongo_utils::{get_mongo_client, get_drinks, get_by_name, get_by_url, get_by_urls, get_by_tastes};  
-use chroma_utils::{get_chroma_client};
-use clip::get_text_embedding;   
+use std::{collections::HashMap, fs, sync::Arc};
 
+use axum::{
+    extract::{State, Query, Json as AxumJson},
+    http::StatusCode,
+    routing::{post},
+    Json, Router,
+};
+
+use tower_http::cors::{Any, CorsLayer};
+
+use embed_anything::embeddings::embed::{Embedder, EmbedderBuilder};
+use mongodb::Collection;
+use serde_json::Value;
 use strum::IntoEnumIterator;
-use std::convert::AsRef;
-use categories::TasteCategories; 
 
 use chromadb::client::ChromaClient;
 
-use std::collections::HashMap;  
-use std::{sync::Arc};
+use categories::TasteCategories;
+use clip::get_text_embedding;
+use chroma_utils::get_chroma_client;
+use mongo_utils::{
+    get_by_name, get_by_tastes, get_by_url, get_by_urls, get_drinks, get_mongo_client,
+};
+use model::{Drink, DrinkQuery, SimilarityExtendedResponse};
 
-use embed_anything::embeddings::embed::{Embedder, EmbedderBuilder};    
-use axum::http::StatusCode;
-
-use mongodb::{Collection};
-
-use std::fs; 
-use serde_json::Value; 
-
-use axum::{routing::{post, get_service}, Router, Json, extract::{State, Query}};
-use axum::extract::Json as AxumJson;
-use tower_http::cors::{Any, CorsLayer};
-use tower_http::services::ServeDir;
 
 struct AppState {
     mongo_collection: Collection<Drink>,
