@@ -11,9 +11,31 @@ body {
   display: flex;
   flex-direction: row;
   min-height: 100vh;
-  margin-left: 13%;
-  margin-right: 13%;
+  /* margin-left: 13%;
+  margin-right: 13%; */
 }
+
+@media (min-width: 2600px) {
+  .app-container {
+    margin-left: 13%;
+    margin-right: 13%;
+  }
+}
+
+@media (max-width: 2600px) and (min-width: 2000px) {
+  .app-container {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
+@media (max-width: 2000px) {
+  .app-container {
+    margin-left: 0%;
+    margin-right: 0%;
+  }
+}
+
 
 .app-header {
   padding: 1rem;
