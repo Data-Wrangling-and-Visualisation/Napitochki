@@ -52,3 +52,12 @@ export async function getAllTastes() {
   });
   return res.json();
 }
+
+export async function getIngredientGraph() {
+  const res = await fetch(`${API_PATH}/network`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({})
+  });
+  return res.json();
+}
