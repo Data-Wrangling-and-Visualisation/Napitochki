@@ -16,7 +16,6 @@ export default function IngredientGraph() {
       .style('top', 0)
       .style('left', '250px');
 
-    // Background
     svg.append('rect')
       .attr('width', width)
       .attr('height', height)
@@ -31,11 +30,9 @@ export default function IngredientGraph() {
       const nodes = data.vertices.map(d => ({ id: d.n_id, rawSize: d.size, origColor: d.color }));
       const links = data.edges.map(d => ({ source: d.source, target: d.target, weight: d.weight }));
 
-      // Node sizing: normalize rawSize to reasonable radii
       const sizeExtent = d3.extent(nodes, d => d.rawSize);
       const nodeRadius = d3.scaleSqrt().domain(sizeExtent).range([5, 150]);
 
-      // Color clusters by original API color mapping to palette
       const uniqueColors = Array.from(new Set(nodes.map(d => d.origColor.join(','))));
       const palette = ['#1f77b4', '#2ca02c', '#ff7f0e', '#9467bd', '#d62728', '#940000', '#0000b4'];
       const colorMap = {};
@@ -43,70 +40,20 @@ export default function IngredientGraph() {
 
       const clusterSizes = {};
       nodes.forEach(node => {
-      const colorKey = node.origColor.join(',');
-      clusterSizes[colorKey] = (clusterSizes[colorKey] || 0) + 1;
+        const colorKey = node.origColor.join(',');
+        clusterSizes[colorKey] = (clusterSizes[colorKey] || 0) + 1;
       });
-
-      // function forceCluster(alpha) {
-      //     nodes.forEach(nodeA => {
-      //       const colorA = nodeA.origColor.join(',');
-      //       nodes.forEach(nodeB => {
-      //           const colorB = nodeB.origColor.join(',');
-      //           if (colorA === colorB && nodeA !== nodeB) {
-      //           // Притягиваем узлы одинакового цвета друг к другу
-      //           const dx = nodeB.x - nodeA.x;
-      //           const dy = nodeB.y - nodeA.y;
-      //           const dist = Math.sqrt(dx * dx + dy * dy);
-      //           if (dist > 0) {
-      //               const force = alpha * 0.1 / dist;
-      //               nodeA.vx += dx * force;
-      //               nodeA.vy += dy * force;
-      //               }
-      //           }
-      //       });
-      //   });
-      // }
-      // function forceCluster(alpha) {
-      //   const clusterCenters = {};
-      //   const clusterNodes = {};
-      //
-      //   nodes.forEach(node => {
-      //     const colorKey = node.origColor.join(',');
-      //     if (!clusterNodes[colorKey]) clusterNodes[colorKey] = [];
-      //     clusterNodes[colorKey].push(node);
-      //   });
-      //
-      //   Object.keys(clusterNodes).forEach(colorKey => {
-      //     const cluster = clusterNodes[colorKey];
-      //     const centerX = d3.mean(cluster, d => d.x);
-      //     const centerY = d3.mean(cluster, d => d.y);
-      //     clusterCenters[colorKey] = { x: centerX, y: centerY };
-      //   });
-      //
-      //   const clusterStrength = 0.2; // not too strong (was 0.3)
-      //
-      //   nodes.forEach(node => {
-      //     const colorKey = node.origColor.join(',');
-      //     const center = clusterCenters[colorKey];
-      //     if (center) {
-      //       node.vx += (center.x - node.x) * alpha * clusterStrength;
-      //       node.vy += (center.y - node.y) * alpha * clusterStrength;
-      //     }
-      //   });
-      //   }
 
       function forceCluster(alpha) {
         const clusterCenters = {};
         const clusterNodes = {};
 
-        // Group nodes by cluster color
         nodes.forEach(node => {
           const colorKey = node.origColor.join(',');
           if (!clusterNodes[colorKey]) clusterNodes[colorKey] = [];
           clusterNodes[colorKey].push(node);
         });
 
-        // Calculate each cluster's center
         Object.keys(clusterNodes).forEach(colorKey => {
           const cluster = clusterNodes[colorKey];
           clusterCenters[colorKey] = {
@@ -115,25 +62,41 @@ export default function IngredientGraph() {
           };
         });
 
-        // Apply attraction toward the cluster center
-        const clusterStrength = 0.4; // Stronger pull inside cluster
+        const clusterStrength = 0.3; // Increased cluster strength
+        const linkClusterStrength = 0.02; // Reduced interaction strength between different clusters
 
         nodes.forEach(node => {
           const colorKey = node.origColor.join(',');
-          const center = clusterCenters[colorKey];
-          if (center) {
-            const dx = center.x - node.x;
-            const dy = center.y - node.y;
+          const ownCenter = clusterCenters[colorKey];
+
+          if (ownCenter) {
+            const dx = ownCenter.x - node.x;
+            const dy = ownCenter.y - node.y;
             node.vx += dx * alpha * clusterStrength;
             node.vy += dy * alpha * clusterStrength;
           }
+
+          links.forEach(link => {
+            if (link.source.id === node.id || link.target.id === node.id) {
+              const otherNode = link.source.id === node.id ? link.target : link.source;
+              const otherColor = otherNode.origColor.join(',');
+              const otherCenter = clusterCenters[otherColor];
+
+              if (otherCenter && otherColor !== colorKey) {
+                const dx = otherCenter.x - node.x;
+                const dy = otherCenter.y - node.y;
+                node.vx += dx * alpha * linkClusterStrength;
+                node.vy += dy * alpha * linkClusterStrength;
+              }
+            }
+          });
         });
-        }
+      }
 
       function forceCentering(alpha) {
         const centerX = width / 2;
         const centerY = height / 2;
-        const centerStrength = 0.03; // Gentle overall pull to center
+        const centerStrength = 0.01; // Lower strength to allow clustering to take precedence
 
         nodes.forEach(node => {
           const dx = centerX - node.x;
@@ -143,49 +106,29 @@ export default function IngredientGraph() {
         });
       }
 
-
-
-
-      //   const simulation = d3.forceSimulation(nodes)
-      // .force('link', d3.forceLink(links)
-      //   .id(d => d.id)
-      //   // .distance(100)
-      //   // .strength(0.08)
-      // )
-      // .force('charge', d3.forceManyBody().strength(-50).theta(0.9).distanceMax(500))
-      // .force('x', d3.forceX(width / 2).strength(0.01))
-      // .force('y', d3.forceY(height / 2).strength(0.01))
-      // .force('collision', d3.forceCollide().radius(d => nodeRadius(d.rawSize) + 4))
-      // .force('cluster', forceCluster)  // Добавляем нашу силу кластеризации
-      // .alphaDecay(0.03).alphaMin(0.001).velocityDecay(0.4);
-
       const simulation = d3.forceSimulation(nodes)
-        .force('link', d3.forceLink(links)
-          .id(d => d.id)
-          .distance(200) // shorter spring length, more compact
-          .strength(0.08)
-        )
-        .force('charge', d3.forceManyBody()
-          .strength(-50) // gravitationalConstant: -50
-        )
+        .force('link', d3.forceLink(links).id(d => d.id).distance(100).strength(0.15))
+        .force('charge', d3.forceManyBody().strength(-10))
         .force('x', d3.forceX(width / 2).strength(0.01))
         .force('y', d3.forceY(height / 2).strength(0.01))
-        .force('collision', d3.forceCollide()
-          .radius(d => nodeRadius(d.rawSize) + 8)
-          .strength(0.9)
-        )
-        .force('cluster', forceCluster)   // clusters pull together
-        .force('superCenter', forceCentering)  // everything pulled to center
-        .alphaDecay(0.02);
+        .force('collision', d3.forceCollide().radius(d => nodeRadius(d.rawSize) + 8).strength(1))
+        .force('cluster', forceCluster)
+        .force('superCenter', forceCentering)
+        .velocityDecay(0.9)
+        .alphaDecay(0.02); // Reduced alpha decay for better stabilization
 
-        const link = g.append('g')
-      .selectAll('line')
-      .data(links)
-      .join('line')
-      .attr('stroke-width', d => Math.sqrt(d.weight))
-      .attr('stroke-opacity', 0.6);
+      const linkStroke = d3.scaleSqrt()
+        .domain(d3.extent(links, d => d.weight))
+        .range([1, 8]);
 
-      // Draw nodes
+      const link = g.append('g')
+        .attr('stroke', '#999')
+        .attr('stroke-opacity', 0.6)
+        .selectAll('line')
+        .data(links)
+        .join('line')
+        .attr('stroke-width', d => linkStroke(d.weight));
+
       const node = g.append('g')
         .selectAll('circle')
         .data(nodes)
@@ -196,18 +139,22 @@ export default function IngredientGraph() {
         .attr('stroke-width', 1)
         .call(d3.drag()
           .on('start', (event, d) => {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            d.fx = d.x; d.fy = d.y;
+            if (!event.active) simulation.alphaTarget(0.05).restart();
+            d.fx = d.x;
+            d.fy = d.y;
           })
-          .on('drag', (event, d) => { d.fx = event.x; d.fy = event.y; })
+          .on('drag', (event, d) => {
+            d.fx = event.x;
+            d.fy = event.y;
+          })
           .on('end', (event, d) => {
             if (!event.active) simulation.alphaTarget(0);
-            d.fx = null; d.fy = null;
+            d.fx = null;
+            d.fy = null;
           })
         );
 
-      // Labels: all nodes
-      g.append('g')
+      const label = g.append('g')
         .selectAll('text')
         .data(nodes)
         .join('text')
@@ -220,7 +167,6 @@ export default function IngredientGraph() {
         .attr('dx', d => nodeRadius(d.rawSize) + 3)
         .attr('dy', '.35em');
 
-      // Tooltip
       const tooltip = d3.select('body').append('div')
         .attr('class', 'ingredient-tooltip')
         .style('position', 'absolute')
@@ -239,54 +185,31 @@ export default function IngredientGraph() {
           .style('top', `${event.pageY + 10}px`);
       }).on('mouseout', () => tooltip.style('opacity', 0));
 
-      // Tick handling
-      // simulation.on('tick', () => {
-      //   g.selectAll('line')
-      //     .attr('x1', d => d.source.x)
-      //     .attr('y1', d => d.source.y)
-      //     .attr('x2', d => d.target.x)
-      //     .attr('y2', d => d.target.y);
-      //
-      //   node
-      //     .attr('cx', d => d.x)
-      //     .attr('cy', d => d.y);
-      //
-      //   g.selectAll('text')
-      //     .attr('x', d => d.x)
-      //     .attr('y', d => d.y);
-      // });
+      simulation.on('tick', () => {
+        link
+          .attr('x1', d => d.source.x)
+          .attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x)
+          .attr('y2', d => d.target.y)
+          .attr('stroke', d => {
+            const sourceColor = d.source.origColor.join(',');
+            const targetColor = d.target.origColor.join(',');
+            return sourceColor === targetColor
+              ? colorMap[sourceColor]
+              : (clusterSizes[sourceColor] >= clusterSizes[targetColor]
+                ? colorMap[sourceColor]
+                : colorMap[targetColor]);
+          });
 
-        simulation.on('tick', () => {
-      // Обновляем цвет рёбер на основе размеров кластеров
-      link
-        .attr('x1', d => d.source.x)
-        .attr('y1', d => d.source.y)
-        .attr('x2', d => d.target.x)
-        .attr('y2', d => d.target.y)
-        .attr('stroke', d => {
-          const sourceColor = d.source.origColor.join(',');
-          const targetColor = d.target.origColor.join(',');
+        node
+          .attr('cx', d => d.x)
+          .attr('cy', d => d.y);
 
-          // Если узлы из одного кластера, берём их цвет
-          if (sourceColor === targetColor) {
-            return colorMap[sourceColor];
-          }
+        label
+          .attr('x', d => d.x)
+          .attr('y', d => d.y);
+      });
 
-          // Иначе берём цвет узла из большего кластера
-          return clusterSizes[sourceColor] >= clusterSizes[targetColor]
-            ? colorMap[sourceColor]
-            : colorMap[targetColor];
-        });
-
-      node
-        .attr('cx', d => d.x)
-        .attr('cy', d => d.y);
-
-      g.selectAll('text')
-        .attr('x', d => d.x)
-        .attr('y', d => d.y);
-    });
-      // Resize handling
       const handleResize = () => {
         width = window.innerWidth - 250;
         height = window.innerHeight;
@@ -295,6 +218,7 @@ export default function IngredientGraph() {
         simulation.force('y', d3.forceY(height / 2).strength(0.02));
         simulation.alpha(0.3).restart();
       };
+
       window.addEventListener('resize', handleResize);
     });
 
