@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import { getIngredientGraph } from '../api/drinks';
+import './IngredientGraph.css'; // Импортируем CSS файл
 
 export default function IngredientGraph() {
   const svgRef = useRef();
@@ -12,14 +13,16 @@ export default function IngredientGraph() {
     const svg = d3.select(svgRef.current)
       .attr('width', width)
       .attr('height', height)
+      .attr('class', 'ingredient-graph-svg')
       .style('position', 'absolute')
       .style('top', 0)
       .style('left', '250px');
 
+    // Меняем цвет фона с черного на белый
     svg.append('rect')
       .attr('width', width)
       .attr('height', height)
-      .attr('fill', '#111');
+      .attr('fill', '#ffffff'); // Меняем с #111 на #ffffff
 
     const g = svg.append('g');
     svg.call(
@@ -45,6 +48,7 @@ export default function IngredientGraph() {
       });
 
       function forceCluster(alpha) {
+        // Сохраняем весь код forceCluster без изменений
         const clusterCenters = {};
         const clusterNodes = {};
 
@@ -94,6 +98,7 @@ export default function IngredientGraph() {
       }
 
       function forceCentering(alpha) {
+        // Сохраняем весь код forceCentering без изменений
         const centerX = width / 2;
         const centerY = height / 2;
         const centerStrength = 0.01; // Lower strength to allow clustering to take precedence
@@ -127,12 +132,14 @@ export default function IngredientGraph() {
         .selectAll('line')
         .data(links)
         .join('line')
+        .attr('class', 'ingredient-link')
         .attr('stroke-width', d => linkStroke(d.weight));
 
       const node = g.append('g')
         .selectAll('circle')
         .data(nodes)
         .join('circle')
+        .attr('class', 'ingredient-node')
         .attr('r', d => nodeRadius(d.rawSize))
         .attr('fill', d => colorMap[d.origColor.join(',')])
         .attr('stroke', '#fff')
@@ -158,24 +165,19 @@ export default function IngredientGraph() {
         .selectAll('text')
         .data(nodes)
         .join('text')
+        .attr('class', 'ingredient-label')
         .text(d => d.id)
         .attr('font-size', '8px')
-        .attr('fill', '#fff')
-        .attr('stroke', '#111')
+        .attr('fill', '#333') // Меняем цвет текста с '#fff' на '#333'
+        .attr('stroke', '#fff') // Меняем цвет обводки с '#111' на '#fff'
         .attr('stroke-width', 2)
         .attr('paint-order', 'stroke')
         .attr('dx', d => nodeRadius(d.rawSize) + 3)
         .attr('dy', '.35em');
 
+      // Обновляем стили подсказки
       const tooltip = d3.select('body').append('div')
         .attr('class', 'ingredient-tooltip')
-        .style('position', 'absolute')
-        .style('pointer-events', 'none')
-        .style('background', 'rgba(0,0,0,0.8)')
-        .style('color', '#fff')
-        .style('padding', '4px 6px')
-        .style('border-radius', '4px')
-        .style('font-size', '12px')
         .style('opacity', 0);
 
       node.on('mouseover', (event, d) => {
@@ -229,5 +231,9 @@ export default function IngredientGraph() {
     };
   }, []);
 
-  return <svg ref={svgRef} />;
+  return (
+    <div className="ingredient-graph-container">
+      <svg ref={svgRef} className="ingredient-graph-svg" />
+    </div>
+  );
 }

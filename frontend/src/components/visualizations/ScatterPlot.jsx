@@ -15,13 +15,7 @@ const ScatterPlot = ({
   useEffect(() => {
     if (!data || data.length === 0) return;
 
-    // Очистка предыдущей визуализации
     d3.select(svgRef.current).selectAll("*").remove();
-
-    // Настройка размеров
-    // const margin = { top: 40, right: 180, bottom: 50, left: 60 };
-    // const width = 800 - margin.left - margin.right;
-    // const height = 600 - margin.top - margin.bottom;
 
     const width = 800;
     const height = 700;
@@ -31,25 +25,6 @@ const ScatterPlot = ({
       .attr("width", width + legendWidth)
       .attr("height", height);
 
-    // Create group for zoomable content
-    // const zoomableGroup = svg.append("g")
-    //   .attr("class", "zoomable-group")
-    //   .attr("transform", `translate(20, 20)`);
-    //
-    // // Use full data extent for consistent scaling
-    // const fullXExtent = d3.extent(fullData || data, d => d.x || 0);
-    // const fullYExtent = d3.extent(fullData || data, d => d.y || 0);
-
-    // Setup scales
-    // const xScale = d3.scaleLinear()
-    //   .domain(fullXExtent)
-    //   .range([0, width - 40]);
-    //
-    // const yScale = d3.scaleLinear()
-    //   .domain(fullYExtent)
-    //   .range([height - 40, 0]);
-
-    // Получение кластера в зависимости от типа эмбеддинга
     const getClusterForEmbedding = (drink) => {
       if (!drink.cluster) return null;
 
@@ -60,7 +35,6 @@ const ScatterPlot = ({
       return drink.cluster;
     };
 
-    // Получение координат в зависимости от типа эмбеддинга
     const getX = (d) => {
       if (d.position && d.position[embeddingType]) {
         return d.position[embeddingType][0];
@@ -75,7 +49,6 @@ const ScatterPlot = ({
       return d.tsne_y !== undefined ? d.tsne_y : 0;
     };
 
-    // Настройка шкал
     const xExtent = d3.extent(data, getX);
     const yExtent = d3.extent(data, getY);
 
@@ -87,7 +60,7 @@ const ScatterPlot = ({
       .domain([yExtent[0] - 5, yExtent[1] + 5])
       .range([height, 0]);
 
-    // Определение цветовой схемы
+
     let colorDomain;
     let colorValueFunction;
 
@@ -105,7 +78,6 @@ const ScatterPlot = ({
         break;
       case 'cluster':
       default:
-        // Фильтрация только валидных кластеров (0-7)
         const validClusters = [0, 1, 2, 3, 4, 5, 6, 7];
         colorDomain = [...new Set(data.map(d => getClusterForEmbedding(d)))]
           .filter(c => c !== null && c !== undefined && validClusters.includes(c))
@@ -118,19 +90,16 @@ const ScatterPlot = ({
         break;
     }
 
-    // Определение цветовой палитры
     const clusterColors = d3.schemeSpectral[8] || d3.schemeTableau10;
     const colorScale = d3.scaleOrdinal()
       .domain(colorDomain)
       .range(colorBy === 'cluster' ? clusterColors : d3.schemeSpectral[colorDomain.length] || d3.schemeCategory10);
 
-    // Создание всплывающей подсказки
     const tooltip = d3.select("body")
       .append("div")
       .attr("class", "tooltip")
       .style("opacity", 0);
 
-    // Добавление осей X и Y
     svg.append("g")
       .attr("class", "x-axis")
       .attr("transform", `translate(0, ${height})`)
@@ -140,7 +109,6 @@ const ScatterPlot = ({
       .attr("class", "y-axis")
       .call(d3.axisLeft(yScale));
 
-    // Добавление подписей к осям
     svg.append("text")
       .attr("class", "axis-label")
       .attr("x", width / 2)
@@ -156,7 +124,6 @@ const ScatterPlot = ({
       .attr("text-anchor", "middle")
       .text(`t-SNE измерение 2 (${embeddingType})`);
 
-    // Добавление точек
     svg.selectAll(".dot")
       .data(data)
       .enter()
@@ -201,22 +168,6 @@ const ScatterPlot = ({
         if (onDrinkSelect) onDrinkSelect(d);
       });
 
-    // Добавление выделения для выбранного напитка
-    // svg.selectAll(".selected-highlight")
-    //   .data(selectedDrink ? [selectedDrink[0]] : [])
-    //   .enter()
-    //   .append("circle")
-    //   .attr("class", "selected-highlight")
-    //   .attr("cx", d => xScale(getX(d)))
-    //   .attr("cy", d => yScale(getY(d)))
-    //   .attr("r", 12)
-    //   .attr("fill", "none")
-    //   .attr("stroke", "#ff4500")
-    //   .attr("stroke-width", 2)
-    //   .attr("stroke-dasharray", "3,3")
-    //   .attr("opacity", 0.8);
-
-    // Добавление легенды
     const legend = svg.append("g")
       .attr("transform", `translate(${width + 20}, 0)`);
 
@@ -254,7 +205,7 @@ const ScatterPlot = ({
         .style("font-size", "12px");
     });
 
-    // Добавление возможности масштабирования
+
     const zoom = d3.zoom()
       .scaleExtent([0.5, 10])
       .on("zoom", (event) => {

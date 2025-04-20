@@ -51,7 +51,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Three Bibkas @</p>
+        <p>Three Bibas @</p>
       </footer>
     </div>
   );
