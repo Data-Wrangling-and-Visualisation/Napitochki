@@ -33,7 +33,7 @@ Project can be started with:
 docker compose up
 ```
 
-### Features
+### Feature demonstration
 Flavor Map
 ![image_2025-04-21_14-19-22](https://github.com/user-attachments/assets/b09004e5-e1d9-421b-b855-d6aba2aa90aa)
 
