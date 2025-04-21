@@ -15,11 +15,17 @@ terms of taste, helping users understand the flavor landscape.
 - **data_collection** - data scrapping from monin.ru
 - **data_exploration** - EDA
 - **data_processing** - tastes and embeddings extraction and pushing them into chromadb
-- **frontend** - currently in development, contains frontend on react.js and d3.js
+- **frontend** - contains frontend on react.js and d3.js
 
 Requirements for python-part (data collection, exploration, processing) are stored in requirements.txt
 
 Requirements for rust-part (backend) are stored in backend/Cargo.toml
+
+### Usage
+Project can be started with:
+```bash
+docker compose up
+```
 
 ### Current stage of the project
 - Data for backend is prepared.
