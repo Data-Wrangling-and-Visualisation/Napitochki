@@ -260,12 +260,12 @@ export default function IngredientGraph() {
   return (
     <div className="ingredient-graph-wrapper">
       <div className="graph-info-panel">
-        <h2>Ingredient Co-occurrence Network</h2>
+        <h3>Ingredient Co-occurrence Network</h3>
         <p>This graph shows how ingredients appear together in drink recipes. Each node represents an ingredient, 
            and connections between nodes indicate ingredients that are commonly used together.</p>
         
         <div className="interaction-guide">
-          <h3>How to interact:</h3>
+          <h4>How to interact:</h4>
           <ul>
             <li><strong>Scroll</strong> to zoom in and out</li>
             <li><strong>Drag</strong> to move the graph around</li>
@@ -273,16 +273,11 @@ export default function IngredientGraph() {
             <li><strong>Click again</strong> to reset the view</li>
           </ul>
         </div>
-        
-        <div className="color-legend">
-          <h3>Color groups:</h3>
-          <p>Ingredients are colored by clusters, representing ingredient families that tend to appear together in recipes.</p>
-        </div>
-      </div>
       
       <div ref={containerRef} className="ingredient-graph-container">
         <svg ref={svgRef} className="ingredient-graph-svg"></svg>
       </div>
+    </div>
     </div>
   );
 }

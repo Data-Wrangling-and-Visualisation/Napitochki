@@ -138,15 +138,15 @@ const DrinksVisualization = () => {
       {selectedDrink && (
         <div className="drink-details">
           <h3>{selectedDrink.name}</h3>
-          <p><strong>Категория:</strong> {selectedDrink.category}</p>
-          <p><strong>Вкус:</strong> {selectedDrink.taste.join(', ')}</p>
-          <h4>Ингредиенты:</h4>
+          <p><strong>Category:</strong> {selectedDrink.category}</p>
+          <p><strong>Taste:</strong> {selectedDrink.taste.join(', ')}</p>
+          <h4>Ingredients:</h4>
           <ul>
             {selectedDrink.ingredients.map((ingredient, idx) => (
               <li key={idx}>{ingredient}</li>
             ))}
           </ul>
-          <h4>Приготовление:</h4>
+          <h4>Serving:</h4>
           <ol>
             {selectedDrink.steps.map((step, idx) => (
               <li key={idx}>{step}</li>
