@@ -90,10 +90,19 @@ const ScatterPlot = ({
         break;
     }
 
-    const clusterColors = d3.schemeSpectral[8] || d3.schemeTableau10;
+    const Colors = [
+        '#acdda5', '#65c2a5', '#3287bd', '#aec7e8',
+        '#9d0142', '#d53e4f', '#f56d43', '#fdae61',
+      '#fee08a', '#fee08a', '#ffffbf', '#e6f598',
+        '#c3e2e6', '#5e4fa2',
+      '#dd6571', '#c5b0d5', '#93c467',
+        ];
+
+
+    // for color scale simply take taste colors
     const colorScale = d3.scaleOrdinal()
       .domain(colorDomain)
-      .range(colorBy === 'cluster' ? clusterColors : d3.schemeSpectral[colorDomain.length] || d3.schemeCategory10);
+        .range(Colors)
 
     const tooltip = d3.select("body")
       .append("div")
@@ -103,11 +112,13 @@ const ScatterPlot = ({
     svg.append("g")
       .attr("class", "x-axis")
       .attr("transform", `translate(0, ${height})`)
-      .call(d3.axisBottom(xScale));
+      .call(d3.axisBottom(xScale))
+      .select("path").remove();
 
     svg.append("g")
       .attr("class", "y-axis")
-      .call(d3.axisLeft(yScale));
+      .call(d3.axisLeft(yScale))
+      .select("path").remove();
 
     svg.append("text")
       .attr("class", "axis-label")
@@ -123,6 +134,13 @@ const ScatterPlot = ({
       .attr("y", -40)
       .attr("text-anchor", "middle")
       .text(`t-SNE измерение 2 (${embeddingType})`);
+
+    svg.append("text")
+      .attr("x", 20)
+      .attr("y", height - 20)
+      .text("Scroll or double-click to zoom")
+      .attr("font-size", "12px")
+      .attr("fill", "#666");
 
     svg.selectAll(".dot")
       .data(data)
@@ -169,14 +187,10 @@ const ScatterPlot = ({
       });
 
     const legend = svg.append("g")
-      .attr("transform", `translate(${width + 20}, 0)`);
+        .attr("transform", `translate(${width - 10}, 20)`);
+      // .attr("transform", `translate(${width + 20}, 0)`);
 
-    legend.append("text")
-      .attr("x", 0)
-      .attr("y", -20)
-      .attr("font-weight", "bold")
-      .text(`COlor by: ${colorBy === 'cluster' ? 'cluster' : 
-             colorBy === 'category' ? 'category' : 'taste'}`);
+
 
     const sortedDomain = [...colorDomain].sort((a, b) => {
       if (colorBy === 'cluster') return a - b;
