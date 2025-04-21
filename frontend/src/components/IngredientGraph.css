@@ -1,51 +1,101 @@
+.ingredient-graph-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.graph-info-panel {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.graph-info-panel h2 {
+  font-size: 24px;
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.graph-info-panel p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+  margin-bottom: 14px;
+}
+
+.interaction-guide, .color-legend {
+  margin-top: 16px;
+}
+
+.interaction-guide h3, .color-legend h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.interaction-guide ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.interaction-guide li {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #555;
+}
+
 .ingredient-graph-container {
   position: relative;
   width: 100%;
-  height: 100%; /* Фиксированная высота вместо 100vh */
+  height: 70vh;
   background: #fff;
+  border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .ingredient-graph-svg {
   width: 100%;
   height: 100%;
-  position: relative !important; /* Переопределяем абсолютное позиционирование */
-  top: auto !important;
-  left: auto !important;
+  background-color: #ffffff;
 }
 
-/* Стили для подсказок */
 .ingredient-tooltip {
   position: absolute;
   pointer-events: none;
-  background: rgba(255, 255, 255, 0.95) !important;
-  color: #333 !important;
-  padding: 8px 12px !important;
-  border: 1px solid #ddd !important;
-  border-radius: 4px !important;
-  font-size: 12px !important;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   z-index: 1000;
   max-width: 200px;
 }
 
-/* Улучшенные стили для меток */
 .ingredient-label {
-  fill: #333 !important;
-  stroke: #ffffff00 !important;
-  stroke-width: 2px !important;
-  paint-order: stroke !important;
-  font-family: Arial, sans-serif;
+  pointer-events: none;
 }
 
-/* Стили для линий */
+.ingredient-node {
+  cursor: pointer;
+}
+
+.ingredient-node:hover {
+  stroke: #333;
+  stroke-width: 2px;
+}
+
+.ingredient-node.active {
+  stroke: #333;
+  stroke-width: 2px;
+}
+
 .ingredient-link {
   stroke-opacity: 0.6;
-}
-
-/* Стили для узлов */
-.ingredient-node {
-  stroke: #fff;
-  stroke-width: 1px;
-  cursor: pointer;
 }
