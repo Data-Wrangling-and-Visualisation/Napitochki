@@ -37,7 +37,8 @@ export default function IngredientGraph() {
         const nodeRadius = d3.scaleSqrt().domain(sizeExtent).range([2, 80]);
 
         const uniqueColors = Array.from(new Set(nodes.map(d => d.origColor.join(','))));
-        const palette = ['#1f77b4', '#2ca02c', '#ff7f0e', '#9467bd', '#d62728', '#940000', '#0000b4'];
+        const palette = ['#91bedf', '#9ce19c', '#dab392', '#b695d8',
+          '#a594da', '#e19696', '#8383cb'];
         const colorMap = {};
         uniqueColors.forEach((c, i) => colorMap[c] = palette[i % palette.length]);
 

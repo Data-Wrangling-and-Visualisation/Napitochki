@@ -32,7 +32,7 @@
 /* Улучшенные стили для меток */
 .ingredient-label {
   fill: #333 !important;
-  stroke: #fff !important;
+  stroke: #ffffff00 !important;
   stroke-width: 2px !important;
   paint-order: stroke !important;
   font-family: Arial, sans-serif;
