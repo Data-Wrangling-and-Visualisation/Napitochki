@@ -6,7 +6,7 @@ Project goal is to develop the visualisation application for different drinks (l
 Allow users to explore drinks based on their taste preferences, making it easier to
 find new favorites.
 - Flavor Mapping:
-Provide a visual representation of how dierent drinks relate to each other in
+Provide a visual representation of how different drinks relate to each other in
 terms of taste, helping users understand the flavor landscape.
 
 ### Current stage of the project
