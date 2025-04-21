@@ -99,15 +99,15 @@ export default function IngredientGraph() {
               if (center) {
                 const dx = center.x - node.x;
                 const dy = center.y - node.y;
-                const sizeFactor = Math.sqrt(node.rawSize); // Уменьшаем силу для маленьких узлов
+                const sizeFactor = Math.sqrt(node.rawSize);
                 node.vx += dx * alpha * clusterStrength / sizeFactor;
                 node.vy += dy * alpha * clusterStrength / sizeFactor;
               }
             });
           })
-          .force('centering', alpha => forceCentering(alpha, nodes, width, height)) // Добавляем силу центровки
-          .velocityDecay(0.5) // Увеличиваем затухание скорости
-          .alphaDecay(0.02); // Ускоряем затухание альфа
+          .force('centering', alpha => forceCentering(alpha, nodes, width, height))
+          .velocityDecay(0.5)
+          .alphaDecay(0.02);
 
         const linkStroke = d3.scaleSqrt()
           .domain(d3.extent(links, d => d.weight))
@@ -161,40 +161,10 @@ export default function IngredientGraph() {
           .attr('paint-order', 'stroke')
             .attr('text-anchor', 'middle')
           .attr('dy', d => nodeRadius(d.rawSize) + 5);
-          // .attr('dx', d => -nodeRadius(d.rawSize) - 3)
-
-          // .attr('dx', d => nodeRadius(d.rawSize) + 3)
-          // .attr('dy', '.35em');
 
         const tooltip = d3.select('body').append('div')
           .attr('class', 'ingredient-tooltip')
           .style('opacity', 0);
-
-        // node.on('mouseover', (event, d) => {
-        //   tooltip.style('opacity', 1)
-        //     .html(`<strong>${d.id}</strong><br/>Count: ${d.rawSize}`)
-        //     .style('left', `${event.pageX + 10}px`)
-        //     .style('top', `${event.pageY + 10}px`);
-        //
-        //   // Подсветка рёбер и соседних узлов
-        //   link.attr('opacity', l => (l.source.id === d.id || l.target.id === d.id) ? 1 : 0.2)
-        //       .attr('stroke-width', l => (l.source.id === d.id || l.target.id === d.id) ? linkStroke(l.weight) : linkStroke(l.weight));
-        //
-        //   node.attr('opacity', n => {
-        //     return (n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id))) ? 1 : 0.2;
-        //   });
-        //
-        //   label.attr('opacity', n => (n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id))) ? 1 : 0.2);
-        // }).on('mouseout', () => {
-        //   tooltip.style('opacity', 0);
-        //
-        //   // Сброс стиля рёбер, узлов и меток
-        //   link.attr('opacity', 0.6)
-        //       .attr('stroke-width', l => linkStroke(l.weight));
-        //
-        //   node.attr('opacity', 1);
-        //   label.attr('opacity', 1);
-        // });
 
         node.on('mouseover', (event, d) => {
           tooltip.style('opacity', 1)
@@ -210,7 +180,6 @@ export default function IngredientGraph() {
           d3.selectAll('.ingredient-label').classed('active', false);
 
           if (!isActive) {
-            // Подсветка рёбер и соседних узлов
             link.attr('opacity', l => (l.source.id === d.id || l.target.id === d.id) ? 1 : 0.2)
                 .attr('stroke-width', l => (l.source.id === d.id || l.target.id === d.id) ? linkStroke(l.weight) : linkStroke(l.weight));
 
@@ -222,7 +191,6 @@ export default function IngredientGraph() {
 
             d3.select(event.currentTarget).classed('active', true);
           } else {
-            // Сброс подсветки
             link.attr('opacity', 0.6)
                 .attr('stroke-width', l => linkStroke(l.weight));
 
