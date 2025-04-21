@@ -25,4 +25,4 @@ Requirements for rust-part (backend) are stored in backend/Cargo.toml
 - Data for backend is prepared.
 - Backend is deployed at http://89.169.174.146:8888, there is a documentation for endpoints in postman:
   https://www.postman.com/warped-star-370484/dwv/collection/qqehskr/drinks
-- Frontend is in development and available at http://89.169.174.146:5173
+- Frontend is available at http://89.169.174.146:5173
