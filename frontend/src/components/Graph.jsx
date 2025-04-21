@@ -13,7 +13,7 @@ export default function Graph() {
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
   const [colorBy, setColorBy] = useState('cluster'); // 'cluster', 'taste', or 'category'
-  const [embeddingType, setEmbeddingType] = useState('combined'); // 'text', 'image', or 'combined'
+  const [embeddingType, setEmbeddingType] = useState('text'); // 'text', 'image', or 'combined'
   const [visualizationType, setVisualizationType] = useState('honeycomb'); // 'honeycomb' или 'scatter'
 
   useEffect(() => {
