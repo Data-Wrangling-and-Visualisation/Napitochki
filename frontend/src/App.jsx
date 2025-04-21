@@ -44,15 +44,14 @@ function App() {
       </header>
 
       <main className="app-content">
-        {activeTab === 'graph' && <Graph />}
-        {activeTab === 'explorer' && <FlavorExplorer />}
-        {activeTab === 'search' && <SimilaritySearch />}
-        {activeTab === 'ingredient-graph' && <IngredientGraph />}
+        {activeTab === 'graph' && <Graph/>}
+        {activeTab === 'explorer' && <FlavorExplorer/>}
+        {activeTab === 'search' && <SimilaritySearch/>}
+        {activeTab === 'ingredient-graph' && <IngredientGraph/>}
+        <footer className="app-footer">
+          <p>Three Bibas @</p>
+        </footer>
       </main>
-
-      <footer className="app-footer">
-        <p>Three Bibas @</p>
-      </footer>
     </div>
   );
 }

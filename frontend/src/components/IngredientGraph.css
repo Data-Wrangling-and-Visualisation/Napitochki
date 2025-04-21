@@ -1,7 +1,7 @@
 .ingredient-graph-container {
   position: relative;
   width: 100%;
-  height: 80vh; /* Фиксированная высота вместо 100vh */
+  height: 100%; /* Фиксированная высота вместо 100vh */
   background: #fff;
   overflow: hidden;
 }

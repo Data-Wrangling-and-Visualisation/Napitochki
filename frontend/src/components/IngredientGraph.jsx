@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import * as d3 from 'd3';
 import { getIngredientGraph } from '../api/drinks';
 import './IngredientGraph.css';
@@ -34,7 +34,7 @@ export default function IngredientGraph() {
         const links = data.edges.map(d => ({ source: d.source, target: d.target, weight: d.weight }));
 
         const sizeExtent = d3.extent(nodes, d => d.rawSize);
-        const nodeRadius = d3.scaleSqrt().domain(sizeExtent).range([5, 150]);
+        const nodeRadius = d3.scaleSqrt().domain(sizeExtent).range([2, 80]);
 
         const uniqueColors = Array.from(new Set(nodes.map(d => d.origColor.join(','))));
         const palette = ['#1f77b4', '#2ca02c', '#ff7f0e', '#9467bd', '#d62728', '#940000', '#0000b4'];
@@ -47,59 +47,10 @@ export default function IngredientGraph() {
           clusterSizes[colorKey] = (clusterSizes[colorKey] || 0) + 1;
         });
 
-        function forceCluster(alpha) {
-          const clusterCenters = {};
-          const clusterNodes = {};
-
-          nodes.forEach(node => {
-            const colorKey = node.origColor.join(',');
-            if (!clusterNodes[colorKey]) clusterNodes[colorKey] = [];
-            clusterNodes[colorKey].push(node);
-          });
-
-          Object.keys(clusterNodes).forEach(colorKey => {
-            const cluster = clusterNodes[colorKey];
-            clusterCenters[colorKey] = {
-              x: d3.mean(cluster, d => d.x),
-              y: d3.mean(cluster, d => d.y)
-            };
-          });
-
-          const clusterStrength = 0.3;
-          const linkClusterStrength = 0.02;
-
-          nodes.forEach(node => {
-            const colorKey = node.origColor.join(',');
-            const ownCenter = clusterCenters[colorKey];
-
-            if (ownCenter) {
-              const dx = ownCenter.x - node.x;
-              const dy = ownCenter.y - node.y;
-              node.vx += dx * alpha * clusterStrength;
-              node.vy += dy * alpha * clusterStrength;
-            }
-
-            links.forEach(link => {
-              if (link.source.id === node.id || link.target.id === node.id) {
-                const otherNode = link.source.id === node.id ? link.target : link.source;
-                const otherColor = otherNode.origColor.join(',');
-                const otherCenter = clusterCenters[otherColor];
-
-                if (otherCenter && otherColor !== colorKey) {
-                  const dx = otherCenter.x - node.x;
-                  const dy = otherCenter.y - node.y;
-                  node.vx += dx * alpha * linkClusterStrength;
-                  node.vy += dy * alpha * linkClusterStrength;
-                }
-              }
-            });
-          });
-        }
-
-        function forceCentering(alpha) {
+        function forceCentering(alpha, nodes, width, height) {
           const centerX = width / 2;
           const centerY = height / 2;
-          const centerStrength = 0.01;
+          const centerStrength = 0.01; // Низкая сила для приоритета кластеризации
 
           nodes.forEach(node => {
             const dx = centerX - node.x;
@@ -110,19 +61,57 @@ export default function IngredientGraph() {
         }
 
         const simulation = d3.forceSimulation(nodes)
-          .force('link', d3.forceLink(links).id(d => d.id).distance(100).strength(0.15))
-          .force('charge', d3.forceManyBody().strength(-10))
+          .force('link', d3.forceLink(links)
+            .id(d => d.id)
+            .distance(50)
+            .strength(1))
+          .force('charge', d3.forceManyBody()
+            .strength(d => -Math.max(20, nodeRadius(d.rawSize) * 6))) // Сила отталкивания зависит от размера узла
           .force('x', d3.forceX(width / 2).strength(0.01))
           .force('y', d3.forceY(height / 2).strength(0.01))
-          .force('collision', d3.forceCollide().radius(d => nodeRadius(d.rawSize) + 8).strength(1))
-          .force('cluster', forceCluster)
-          .force('superCenter', forceCentering)
-          .velocityDecay(0.9)
-          .alphaDecay(0.02);
+          .force('collision', d3.forceCollide()
+            .radius(d => nodeRadius(d.rawSize) + 10) // Увеличиваем радиус столкновения
+            .strength(0.9)) // Увеличиваем силу столкновения
+          .force('cluster', alpha => {
+            const clusterCenters = {};
+            const clusterStrength = 0.3;
+
+            // Вычисляем центры кластеров
+            nodes.forEach(node => {
+              const colorKey = node.origColor.join(',');
+              if (!clusterCenters[colorKey]) {
+                clusterCenters[colorKey] = { x: 0, y: 0, count: 0 };
+              }
+              clusterCenters[colorKey].x += node.x;
+              clusterCenters[colorKey].y += node.y;
+              clusterCenters[colorKey].count++;
+            });
+
+            Object.keys(clusterCenters).forEach(colorKey => {
+              clusterCenters[colorKey].x /= clusterCenters[colorKey].count;
+              clusterCenters[colorKey].y /= clusterCenters[colorKey].count;
+            });
+
+            // Применяем силу кластеризации
+            nodes.forEach(node => {
+              const colorKey = node.origColor.join(',');
+              const center = clusterCenters[colorKey];
+              if (center) {
+                const dx = center.x - node.x;
+                const dy = center.y - node.y;
+                const sizeFactor = Math.sqrt(node.rawSize); // Уменьшаем силу для маленьких узлов
+                node.vx += dx * alpha * clusterStrength / sizeFactor;
+                node.vy += dy * alpha * clusterStrength / sizeFactor;
+              }
+            });
+          })
+          .force('centering', alpha => forceCentering(alpha, nodes, width, height)) // Добавляем силу центровки
+          .velocityDecay(0.5) // Увеличиваем затухание скорости
+          .alphaDecay(0.02); // Ускоряем затухание альфа
 
         const linkStroke = d3.scaleSqrt()
           .domain(d3.extent(links, d => d.weight))
-          .range([1, 8]);
+          .range([1, 6]);
 
         const link = g.append('g')
           .attr('stroke', '#999')
@@ -165,17 +154,47 @@ export default function IngredientGraph() {
           .join('text')
           .attr('class', 'ingredient-label')
           .text(d => d.id)
-          .attr('font-size', '8px')
+          .attr('font-size', '4px')
           .attr('fill', '#333')
           .attr('stroke', '#fff')
           .attr('stroke-width', 2)
           .attr('paint-order', 'stroke')
-          .attr('dx', d => nodeRadius(d.rawSize) + 3)
-          .attr('dy', '.35em');
+            .attr('text-anchor', 'middle')
+          .attr('dy', d => nodeRadius(d.rawSize) + 5);
+          // .attr('dx', d => -nodeRadius(d.rawSize) - 3)
+
+          // .attr('dx', d => nodeRadius(d.rawSize) + 3)
+          // .attr('dy', '.35em');
 
         const tooltip = d3.select('body').append('div')
           .attr('class', 'ingredient-tooltip')
           .style('opacity', 0);
+
+        // node.on('mouseover', (event, d) => {
+        //   tooltip.style('opacity', 1)
+        //     .html(`<strong>${d.id}</strong><br/>Count: ${d.rawSize}`)
+        //     .style('left', `${event.pageX + 10}px`)
+        //     .style('top', `${event.pageY + 10}px`);
+        //
+        //   // Подсветка рёбер и соседних узлов
+        //   link.attr('opacity', l => (l.source.id === d.id || l.target.id === d.id) ? 1 : 0.2)
+        //       .attr('stroke-width', l => (l.source.id === d.id || l.target.id === d.id) ? linkStroke(l.weight) : linkStroke(l.weight));
+        //
+        //   node.attr('opacity', n => {
+        //     return (n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id))) ? 1 : 0.2;
+        //   });
+        //
+        //   label.attr('opacity', n => (n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id))) ? 1 : 0.2);
+        // }).on('mouseout', () => {
+        //   tooltip.style('opacity', 0);
+        //
+        //   // Сброс стиля рёбер, узлов и меток
+        //   link.attr('opacity', 0.6)
+        //       .attr('stroke-width', l => linkStroke(l.weight));
+        //
+        //   node.attr('opacity', 1);
+        //   label.attr('opacity', 1);
+        // });
 
         node.on('mouseover', (event, d) => {
           tooltip.style('opacity', 1)
@@ -183,6 +202,36 @@ export default function IngredientGraph() {
             .style('left', `${event.pageX + 10}px`)
             .style('top', `${event.pageY + 10}px`);
         }).on('mouseout', () => tooltip.style('opacity', 0));
+
+        node.on('click', (event, d) => {
+          const isActive = d3.select(event.currentTarget).classed('active');
+          d3.selectAll('.ingredient-node').classed('active', false);
+          d3.selectAll('.ingredient-link').classed('active', false);
+          d3.selectAll('.ingredient-label').classed('active', false);
+
+          if (!isActive) {
+            // Подсветка рёбер и соседних узлов
+            link.attr('opacity', l => (l.source.id === d.id || l.target.id === d.id) ? 1 : 0.2)
+                .attr('stroke-width', l => (l.source.id === d.id || l.target.id === d.id) ? linkStroke(l.weight) : linkStroke(l.weight));
+
+            node.attr('opacity', n => {
+              return (n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id))) ? 1 : 0.2;
+            });
+
+            label.attr('opacity', n => (n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id))) ? 1 : 0.2);
+
+            d3.select(event.currentTarget).classed('active', true);
+          } else {
+            // Сброс подсветки
+            link.attr('opacity', 0.6)
+                .attr('stroke-width', l => linkStroke(l.weight));
+
+            node.attr('opacity', 1);
+            label.attr('opacity', 1);
+          }
+        });
+
+
 
         simulation.on('tick', () => {
           link
